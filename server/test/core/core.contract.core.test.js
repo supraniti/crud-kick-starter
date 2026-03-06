@@ -1,0 +1,17 @@
+import "./manifest-discovery.schema.core.test.js";
+import "./manifest-discovery.field-plugin.core.test.js";
+import "./manifest-discovery.loader-lifecycle.core.test.js";
+import "./manifest-discovery.filesystem.core.test.js";
+import "./safeguard-docker.core.test.js";
+import "./collection-persistence-registry.core.test.js";
+import "./service-mission-registry.core.test.js";
+import "./schema-query-mutation.core.test.js";
+import "./module-settings-normalization.core.test.js";
+import "./async-job-runner.core.test.js";
+import "./reference-field-key.core.test.js";
+import "./module-scaffolder.singularization.core.test.js";
+import "./module-scaffolder.route-view.core.test.js";
+import "./module-scaffolder.field-descriptor.core.test.js";
+import "./module-scaffolder.generated-descriptor-validation.core.test.js";
+import "./module-scaffolder.persistence-policy.core.test.js";
+import "./module-scaffolder.profile-validation.core.test.js";

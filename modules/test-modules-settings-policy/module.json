@@ -1,0 +1,651 @@
+{
+  "contractVersion": 1,
+  "id": "test-modules-settings-policy",
+  "version": "0.1.0",
+  "name": "Test Modules Settings Policy Module",
+  "capabilities": [
+    "crud.collection",
+    "schema",
+    "service",
+    "settings",
+    "ui.route"
+  ],
+  "lifecycle": {
+    "install": "test-modules-settings-policy.install",
+    "uninstall": "test-modules-settings-policy.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs",
+    "fieldTypePlugins": "./server/field-type-plugins.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "gateDeletePolicy",
+        "label": "Gate Delete Policy",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "restrict",
+        "options": [
+          {
+            "value": "restrict",
+            "label": "Restrict"
+          },
+          {
+            "value": "nullify",
+            "label": "Nullify"
+          }
+        ],
+        "description": "Policy applied when deleting a gate referenced by release plans."
+      },
+      {
+        "id": "incidentDeletePolicy",
+        "label": "Incident Delete Policy",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "restrict",
+        "options": [
+          {
+            "value": "restrict",
+            "label": "Restrict"
+          },
+          {
+            "value": "nullify",
+            "label": "Nullify"
+          }
+        ],
+        "description": "Policy applied when deleting checkpoints referenced by drill plans."
+      },
+      {
+        "id": "slugMaxLength",
+        "label": "Slug Max Length",
+        "type": "number",
+        "required": true,
+        "sensitive": false,
+        "description": "Maximum length for generated release-plan slug values.",
+        "min": 8,
+        "max": 120,
+        "defaultValue": 48
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Test Modules Settings Policy",
+      "icon": "policy",
+      "order": 430
+    },
+    "routeView": {
+      "kind": "collections",
+      "viewId": "test-modules-settings-policy",
+      "capabilities": {
+        "usesCollectionsDomain": true
+      },
+      "bannerMessage": "Module-owned view entrypoint: Test Modules Settings Policy"
+    }
+  },
+  "collections": [
+    {
+      "id": "iter2-environments",
+      "label": "Iter2 Environments",
+      "primaryField": "label",
+      "description": "Iter2 Environments managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "tier",
+          "label": "Tier",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "dev",
+            "staging",
+            "production"
+          ],
+          "defaultValue": "dev"
+        },
+        {
+          "id": "region",
+          "label": "Region",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 80
+        }
+      ],
+      "entitySingular": "iter2-environment",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter2-gates",
+      "label": "Iter2 Gates",
+      "primaryField": "label",
+      "description": "Iter2 Gates managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "gateType",
+          "label": "Gate Type",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "approval",
+            "automated"
+          ],
+          "defaultValue": "approval"
+        },
+        {
+          "id": "parentGateId",
+          "label": "Parent Gate",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter2-gates",
+          "labelField": "label",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "optionsFilter": {
+              "fieldId": "gateType",
+              "sourceFieldId": "gateType"
+            }
+          }
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "pending",
+            "passed",
+            "failed"
+          ],
+          "defaultValue": "pending"
+        }
+      ],
+      "entitySingular": "iter2-gate",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter2-release-plans",
+      "label": "Iter2 Release Plans",
+      "primaryField": "title",
+      "description": "Iter2 Release Plans managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "environmentId",
+          "label": "Environment",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter2-environments",
+          "labelField": "label",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "gateIds",
+          "label": "Gates",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "iter2-gates",
+          "labelField": "label",
+          "onDelete": "restrict",
+          "onDeleteSetting": "gateDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "approved",
+            "released"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "slugMaxLength"
+          }
+        }
+      ],
+      "entitySingular": "iter2-release-plan",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter3-checkpoints",
+      "label": "Iter3 Checkpoints",
+      "primaryField": "label",
+      "description": "Iter3 checkpoints managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "parentCheckpointId",
+          "label": "Parent Checkpoint",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter3-checkpoints",
+          "labelField": "label",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "kind",
+          "label": "Kind",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "safety",
+            "communication",
+            "recovery"
+          ],
+          "defaultValue": "safety"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "pending",
+            "ready",
+            "complete"
+          ],
+          "defaultValue": "pending"
+        }
+      ],
+      "entitySingular": "iter3-checkpoint",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter3-drill-plans",
+      "label": "Iter3 Drill Plans",
+      "primaryField": "title",
+      "description": "Iter3 drill plans managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "checkpointIds",
+          "label": "Checkpoints",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "iter3-checkpoints",
+          "labelField": "label",
+          "onDelete": "restrict",
+          "onDeleteSetting": "incidentDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "active",
+            "archived"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "slugMaxLength"
+          }
+        }
+      ],
+      "entitySingular": "iter3-drill-plan",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "wpx-settings",
+      "label": "WPX Settings",
+      "entitySingular": "wpx-setting",
+      "primaryField": "title",
+      "description": "Reading/discussion/permalink settings that affect publish flow behavior.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Profile Name",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "readingBehavior",
+          "label": "Reading Behavior",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "latest",
+            "static-front"
+          ],
+          "defaultValue": "latest"
+        },
+        {
+          "id": "discussionBehavior",
+          "label": "Discussion Behavior",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "open",
+            "moderated",
+            "closed"
+          ],
+          "defaultValue": "open"
+        },
+        {
+          "id": "permalinkBase",
+          "label": "Permalink Base",
+          "type": "text",
+          "required": true,
+          "minLength": 1,
+          "maxLength": 40,
+          "defaultValue": "blog"
+        },
+        {
+          "id": "policyMode",
+          "label": "Publish Policy",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "direct",
+            "moderated"
+          ],
+          "defaultValue": "direct"
+        },
+        {
+          "id": "runtimeContext",
+          "label": "Runtime Context",
+          "type": "structured-object",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "remoteDistribution",
+                  "label": "Remote Distribution",
+                  "type": "boolean",
+                  "required": false
+                },
+                {
+                  "id": "defaultChannels",
+                  "label": "Default Channels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 6
+                },
+                {
+                  "id": "slugPrefix",
+                  "label": "Slug Prefix",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 20
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "moderationStages",
+          "label": "Moderation Stages",
+          "type": "structured-object-array",
+          "required": false,
+          "constraints": {
+            "itemLabel": "stage",
+            "minItems": 0,
+            "maxItems": 12,
+            "itemSchema": {
+              "properties": [
+                {
+                  "id": "label",
+                  "label": "Label",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 2,
+                  "maxLength": 80
+                },
+                {
+                  "id": "autoApprove",
+                  "label": "Auto Approve",
+                  "type": "boolean",
+                  "required": false
+                },
+                {
+                  "id": "tags",
+                  "label": "Tags",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 8
+                }
+              ]
+            }
+          },
+          "defaultValue": []
+        },
+        {
+          "id": "moderationProfile",
+          "label": "Moderation Profile",
+          "type": "wpx-moderation-profile",
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "mode",
+                  "label": "Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "open",
+                    "moderated",
+                    "strict"
+                  ]
+                },
+                {
+                  "id": "sensitivity",
+                  "label": "Sensitivity",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 100
+                },
+                {
+                  "id": "reviewerGroup",
+                  "label": "Reviewer Group",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 80
+                },
+                {
+                  "id": "channels",
+                  "label": "Channels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 6
+                }
+              ]
+            }
+          },
+          "required": false,
+          "defaultValue": null
+        }
+      ],
+      "behavior": {
+        "enforcePrimaryFieldUnique": true
+      }
+    }
+  ],
+  "metadata": {
+    "owner": "reference-domain-runtime",
+    "maturity": "proof",
+    "recomposition": {
+      "stage": "stage-3",
+      "wave": "S3.1",
+      "pass": "capability-recomposition-pass1",
+      "timestampUtc": "2026-03-03T16:26:04.637Z",
+      "legacyModuleIds": [
+        "iter2-environments",
+        "iter2-gates",
+        "iter2-release-plans",
+        "iter3-checkpoints",
+        "iter3-drill-plans",
+        "wpx-settings"
+      ]
+    }
+  }
+}
+

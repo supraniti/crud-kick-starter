@@ -1,0 +1,1842 @@
+{
+  "contractVersion": 1,
+  "id": "test-modules-operations-dispatch",
+  "version": "0.1.0",
+  "name": "Test Modules Operations Dispatch Module",
+  "capabilities": [
+    "crud.collection",
+    "mission",
+    "mission.operator",
+    "schema",
+    "service",
+    "settings",
+    "ui.route"
+  ],
+  "lifecycle": {
+    "install": "test-modules-operations-dispatch.install",
+    "uninstall": "test-modules-operations-dispatch.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs",
+    "fieldTypePlugins": "./server/field-type-plugins.mjs",
+    "missions": "./server/missions.mjs",
+    "referenceOptionsProviders": "./server/reference-options-providers.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "defaultCategory",
+        "label": "Default Category",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "news",
+            "label": "News"
+          },
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "ops",
+            "label": "Ops"
+          }
+        ],
+        "defaultValue": "news",
+        "description": "Applied when editors create new dispatch profiles."
+      },
+      {
+        "id": "defaultDispatchStatus",
+        "label": "Default Dispatch Status",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "draft",
+        "options": [
+          {
+            "value": "draft",
+            "label": "Draft"
+          },
+          {
+            "value": "ready",
+            "label": "Ready"
+          }
+        ],
+        "description": "Default status guidance for new dispatch runs."
+      },
+      {
+        "id": "defaultSeverityPolicy",
+        "label": "Default Severity Policy",
+        "type": "object",
+        "required": true,
+        "defaultValue": {
+          "defaultSeverity": "medium",
+          "autoEscalate": false
+        },
+        "fields": [
+          {
+            "id": "defaultSeverity",
+            "label": "Default Severity",
+            "type": "enum",
+            "required": true,
+            "defaultValue": "medium",
+            "options": [
+              {
+                "value": "low",
+                "label": "Low"
+              },
+              {
+                "value": "medium",
+                "label": "Medium"
+              },
+              {
+                "value": "high",
+                "label": "High"
+              }
+            ]
+          },
+          {
+            "id": "autoEscalate",
+            "label": "Auto Escalate",
+            "type": "boolean",
+            "required": true,
+            "defaultValue": false
+          }
+        ]
+      },
+      {
+        "id": "editorialMode",
+        "label": "Editorial Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "strict",
+            "label": "Strict"
+          }
+        ],
+        "defaultValue": "standard",
+        "description": "Controls dispatch validation strictness for editorial workflows."
+      },
+      {
+        "id": "incidentDeletePolicy",
+        "label": "Incident Delete Policy",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "restrict",
+        "options": [
+          {
+            "value": "restrict",
+            "label": "Restrict"
+          },
+          {
+            "value": "nullify",
+            "label": "Nullify"
+          }
+        ],
+        "description": "Policy applied when deleting drill runs referenced by incidents."
+      },
+      {
+        "id": "naming",
+        "label": "Naming",
+        "type": "object",
+        "required": true,
+        "defaultValue": {
+          "slug": {
+            "maxLength": 32,
+            "prefix": "pbk"
+          }
+        },
+        "fields": [
+          {
+            "id": "slug",
+            "label": "Slug",
+            "type": "object",
+            "required": true,
+            "fields": [
+              {
+                "id": "maxLength",
+                "label": "Max Length",
+                "type": "number",
+                "required": true,
+                "min": 8,
+                "max": 120,
+                "defaultValue": 32
+              },
+              {
+                "id": "prefix",
+                "label": "Prefix",
+                "type": "text",
+                "required": true,
+                "defaultValue": "pbk"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "publishChannels",
+        "label": "Publish Channels",
+        "type": "enum-multi",
+        "required": true,
+        "options": [
+          {
+            "value": "web",
+            "label": "Web"
+          },
+          {
+            "value": "email",
+            "label": "Email"
+          },
+          {
+            "value": "sms",
+            "label": "SMS"
+          }
+        ],
+        "defaultValue": [
+          "web"
+        ],
+        "description": "Default channels used for dispatch publishing."
+      },
+      {
+        "id": "requireReview",
+        "label": "Require Review",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Require review before publishing dispatch profiles."
+      },
+      {
+        "id": "runDeletePolicy",
+        "label": "Run Delete Policy",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "restrict",
+        "options": [
+          {
+            "value": "restrict",
+            "label": "Restrict"
+          },
+          {
+            "value": "nullify",
+            "label": "Nullify"
+          }
+        ],
+        "description": "Policy applied when deleting playbook runs referenced by findings."
+      },
+      {
+        "id": "slugMaxLength",
+        "label": "Slug Max Length",
+        "type": "number",
+        "required": true,
+        "min": 12,
+        "max": 120,
+        "defaultValue": 64,
+        "description": "Maximum slug length used by computed slug fields."
+      },
+      {
+        "id": "webhookToken",
+        "label": "Webhook Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Token used by external profile sync webhooks."
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Test Modules Operations Dispatch",
+      "icon": "route",
+      "order": 440
+    },
+    "routeView": {
+      "kind": "collections",
+      "viewId": "test-modules-operations-dispatch",
+      "capabilities": {
+        "usesCollectionsDomain": true
+      },
+      "bannerMessage": "Module-owned view entrypoint: Test Modules Operations Dispatch"
+    }
+  },
+  "collections": [
+    {
+      "id": "dispatches",
+      "label": "Dispatches",
+      "entitySingular": "dispatch",
+      "primaryField": "title",
+      "description": "Dispatches managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "published-on",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "record-id",
+          "label": "Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "slugMaxLength"
+          }
+        }
+      ],
+      "behavior": {
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter1-assets",
+      "label": "Iter1 Assets",
+      "primaryField": "name",
+      "description": "Iter1 Assets managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 140
+        },
+        {
+          "id": "type",
+          "label": "Type",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "image",
+            "html",
+            "text"
+          ],
+          "defaultValue": "image"
+        },
+        {
+          "id": "sourceUrl",
+          "label": "Source URL",
+          "type": "url",
+          "required": false
+        }
+      ],
+      "entitySingular": "iter1-asset",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter1-audiences",
+      "label": "Iter1 Audiences",
+      "primaryField": "label",
+      "description": "Iter1 Audiences managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "segmentKey",
+          "label": "Segment Key",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "taxonomy",
+          "label": "Taxonomy",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "region",
+            "interest",
+            "lifecycle"
+          ],
+          "defaultValue": "region"
+        },
+        {
+          "id": "parentAudienceId",
+          "label": "Parent Audience",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter1-audiences",
+          "labelField": "label",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true,
+            "optionsFilter": {
+              "fieldId": "taxonomy",
+              "sourceFieldId": "taxonomy"
+            },
+            "inlineCreateDefaults": [
+              {
+                "fieldId": "taxonomy",
+                "sourceFieldId": "taxonomy"
+              }
+            ]
+          }
+        }
+      ],
+      "entitySingular": "iter1-audience",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter1-campaigns",
+      "label": "Iter1 Campaigns",
+      "primaryField": "title",
+      "description": "Iter1 Campaigns managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "primaryAudienceId",
+          "label": "Primary Audience",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter1-audiences",
+          "labelField": "label",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "assetIds",
+          "label": "Assets",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "iter1-assets",
+          "labelField": "name",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "ready",
+            "dispatched"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "slugMaxLength"
+          }
+        }
+      ],
+      "entitySingular": "iter1-campaign",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter1-dispatches",
+      "label": "Iter1 Dispatches",
+      "primaryField": "title",
+      "description": "Iter1 Dispatches managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 160
+        },
+        {
+          "id": "campaignId",
+          "label": "Campaign",
+          "type": "reference",
+          "required": true,
+          "collectionId": "iter1-campaigns",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "remoteId",
+          "label": "Remote",
+          "type": "reference",
+          "required": true,
+          "collectionId": "remotes",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "state",
+          "label": "State",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed"
+          ],
+          "defaultValue": "queued"
+        },
+        {
+          "id": "jobId",
+          "label": "Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        }
+      ],
+      "entitySingular": "iter1-dispatch",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter2-executions",
+      "label": "Iter2 Executions",
+      "primaryField": "title",
+      "description": "Iter2 Executions managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 160
+        },
+        {
+          "id": "releasePlanId",
+          "label": "Release Plan",
+          "type": "reference",
+          "required": true,
+          "collectionId": "iter2-release-plans",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "remoteId",
+          "label": "Remote",
+          "type": "reference",
+          "required": true,
+          "collectionId": "remotes",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "state",
+          "label": "State",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed"
+          ],
+          "defaultValue": "queued"
+        },
+        {
+          "id": "jobId",
+          "label": "Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        }
+      ],
+      "entitySingular": "iter2-execution",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter3-drill-runs",
+      "label": "Iter3 Drill Runs",
+      "primaryField": "title",
+      "description": "Iter3 drill runs managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 160
+        },
+        {
+          "id": "drillPlanId",
+          "label": "Drill Plan",
+          "type": "reference",
+          "required": true,
+          "collectionId": "iter3-drill-plans",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "remoteId",
+          "label": "Remote",
+          "type": "reference",
+          "required": true,
+          "collectionId": "remotes",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "missionId",
+          "label": "Mission",
+          "type": "reference",
+          "required": true,
+          "collectionId": "missions",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "state",
+          "label": "State",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed"
+          ],
+          "defaultValue": "queued"
+        },
+        {
+          "id": "jobId",
+          "label": "Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        }
+      ],
+      "entitySingular": "iter3-drill-run",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter3-incidents",
+      "label": "Iter3 Incidents",
+      "primaryField": "title",
+      "description": "Iter3 incidents managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "drillRunId",
+          "label": "Drill Run",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter3-drill-runs",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "onDeleteSetting": "incidentDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "severity",
+          "label": "Severity",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "defaultValue": "medium"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "open",
+            "investigating",
+            "resolved"
+          ],
+          "defaultValue": "open"
+        }
+      ],
+      "entitySingular": "iter3-incident",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter4-dispatch-runs",
+      "label": "Iter4 Dispatch Runs",
+      "primaryField": "title",
+      "description": "Iter4 dispatch runs managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 160
+        },
+        {
+          "id": "responsePlanId",
+          "label": "Response Plan",
+          "type": "reference",
+          "required": true,
+          "collectionId": "iter4-response-plans",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "remoteId",
+          "label": "Remote",
+          "type": "reference",
+          "required": true,
+          "collectionId": "remotes",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "missionId",
+          "label": "Mission",
+          "type": "reference",
+          "required": true,
+          "collectionId": "missions",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "ready",
+            "running",
+            "succeeded",
+            "failed"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "jobId",
+          "label": "Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        }
+      ],
+      "entitySingular": "iter4-dispatch-run",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter4-incidents",
+      "label": "Iter4 Incidents",
+      "primaryField": "title",
+      "description": "Iter4 incidents managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "dispatchRunId",
+          "label": "Dispatch Run",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter4-dispatch-runs",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "onDeleteSetting": "incidentDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "relatedMissionIds",
+          "label": "Related Missions",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "missions",
+          "labelField": "label",
+          "onDelete": "nullify"
+        },
+        {
+          "id": "severity",
+          "label": "Severity",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "defaultValue": "medium"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "open",
+            "investigating",
+            "resolved"
+          ],
+          "defaultValue": "open"
+        }
+      ],
+      "entitySingular": "iter4-incident",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter4-response-plans",
+      "label": "Iter4 Response Plans",
+      "primaryField": "title",
+      "description": "Iter4 response plans managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "windowIds",
+          "label": "Response Windows",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "iter4-response-windows",
+          "labelField": "label",
+          "onDelete": "restrict",
+          "onDeleteSetting": "incidentDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "ready",
+            "live"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "slugMaxLength"
+          }
+        }
+      ],
+      "entitySingular": "iter4-response-plan",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter4-response-windows",
+      "label": "Iter4 Response Windows",
+      "primaryField": "label",
+      "description": "Iter4 response windows managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "parentWindowId",
+          "label": "Parent Window",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter4-response-windows",
+          "labelField": "label",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "kind",
+          "label": "Kind",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "containment",
+            "investigation",
+            "recovery"
+          ],
+          "defaultValue": "containment"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "active",
+            "closed"
+          ],
+          "defaultValue": "draft"
+        }
+      ],
+      "entitySingular": "iter4-response-window",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter5-findings",
+      "label": "Iter5 Findings",
+      "primaryField": "title",
+      "description": "Iter5 findings recorded from playbook run outcomes.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "traceCode",
+          "label": "Trace Code",
+          "type": "iter5-trace-code",
+          "required": false,
+          "minLength": 4,
+          "maxLength": 40
+        },
+        {
+          "id": "analysisBundle",
+          "label": "Analysis Bundle",
+          "type": "iter5-analysis-bundle",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "stage",
+                  "label": "Stage",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "triage",
+                    "investigation",
+                    "resolved"
+                  ]
+                },
+                {
+                  "id": "confidence",
+                  "label": "Confidence",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 100
+                },
+                {
+                  "id": "notes",
+                  "label": "Notes",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 180
+                },
+                {
+                  "id": "tags",
+                  "label": "Tags",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 8
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "runId",
+          "label": "Playbook Run",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter5-playbook-runs",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "onDeleteSetting": "runDeletePolicy",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "relatedMissionIds",
+          "label": "Related Missions",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "missions",
+          "labelField": "label",
+          "onDelete": "nullify"
+        },
+        {
+          "id": "evidenceItems",
+          "label": "Evidence Items",
+          "type": "structured-object-array",
+          "required": false,
+          "constraints": {
+            "itemLabel": "evidence",
+            "minItems": 0,
+            "maxItems": 40,
+            "itemSchema": {
+              "properties": [
+                {
+                  "id": "label",
+                  "label": "Label",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                {
+                  "id": "kind",
+                  "label": "Kind",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "log",
+                    "screenshot",
+                    "artifact"
+                  ]
+                },
+                {
+                  "id": "uri",
+                  "label": "URI",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 220
+                },
+                {
+                  "id": "metrics",
+                  "label": "Metrics",
+                  "type": "group",
+                  "required": false,
+                  "properties": [
+                    {
+                      "id": "score",
+                      "label": "Score",
+                      "type": "number",
+                      "required": false,
+                      "min": 0,
+                      "max": 100
+                    },
+                    {
+                      "id": "labels",
+                      "label": "Labels",
+                      "type": "string-list",
+                      "required": false,
+                      "minItems": 0,
+                      "maxItems": 10
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "defaultValue": []
+        },
+        {
+          "id": "severity",
+          "label": "Severity",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "defaultValue": "medium"
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "open",
+            "investigating",
+            "resolved"
+          ],
+          "defaultValue": "open"
+        }
+      ],
+      "entitySingular": "iter5-finding",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter5-playbook-runs",
+      "label": "Iter5 Playbook Runs",
+      "primaryField": "title",
+      "description": "Iter5 playbook execution runs with provider-backed references and nested envelopes.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "traceCode",
+          "label": "Trace Code",
+          "type": "iter5-trace-code",
+          "required": false,
+          "minLength": 4,
+          "maxLength": 40
+        },
+        {
+          "id": "analysisBundle",
+          "label": "Analysis Bundle",
+          "type": "iter5-analysis-bundle",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "stage",
+                  "label": "Stage",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "triage",
+                    "investigation",
+                    "resolved"
+                  ]
+                },
+                {
+                  "id": "confidence",
+                  "label": "Confidence",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 100
+                },
+                {
+                  "id": "notes",
+                  "label": "Notes",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 180
+                },
+                {
+                  "id": "tags",
+                  "label": "Tags",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 8
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "playbookId",
+          "label": "Playbook",
+          "type": "reference",
+          "required": true,
+          "collectionId": "iter5-playbooks",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "remoteId",
+          "label": "Remote",
+          "type": "reference",
+          "required": true,
+          "collectionId": "remotes",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "missionId",
+          "label": "Mission",
+          "type": "reference",
+          "required": true,
+          "collectionId": "missions",
+          "labelField": "label",
+          "onDelete": "restrict"
+        },
+        {
+          "id": "executionEnvelope",
+          "label": "Execution Envelope",
+          "type": "structured-object",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "trigger",
+                  "label": "Trigger",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                {
+                  "id": "environment",
+                  "label": "Environment",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "staging",
+                    "production"
+                  ]
+                },
+                {
+                  "id": "retries",
+                  "label": "Retries",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 10
+                },
+                {
+                  "id": "notifyOnFailure",
+                  "label": "Notify On Failure",
+                  "type": "boolean",
+                  "required": false
+                },
+                {
+                  "id": "channels",
+                  "label": "Channels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 6
+                },
+                {
+                  "id": "transport",
+                  "label": "Transport",
+                  "type": "group",
+                  "required": false,
+                  "properties": [
+                    {
+                      "id": "protocol",
+                      "label": "Protocol",
+                      "type": "enum",
+                      "required": true,
+                      "options": [
+                        "http",
+                        "ssh"
+                      ]
+                    },
+                    {
+                      "id": "endpoint",
+                      "label": "Endpoint",
+                      "type": "text",
+                      "required": true,
+                      "minLength": 4,
+                      "maxLength": 140
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "ready",
+            "running",
+            "succeeded",
+            "failed"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "jobId",
+          "label": "Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        }
+      ],
+      "entitySingular": "iter5-playbook-run",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter5-playbooks",
+      "label": "Iter5 Playbooks",
+      "primaryField": "title",
+      "description": "Iter5 response playbooks with nested step blueprints.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 160
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "parentPlaybookId",
+          "label": "Parent Playbook",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter5-playbooks",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "stepBlueprints",
+          "label": "Step Blueprints",
+          "type": "structured-object-array",
+          "required": false,
+          "constraints": {
+            "itemLabel": "step",
+            "minItems": 0,
+            "maxItems": 25,
+            "itemSchema": {
+              "properties": [
+                {
+                  "id": "label",
+                  "label": "Label",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 2,
+                  "maxLength": 90
+                },
+                {
+                  "id": "mode",
+                  "label": "Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "auto",
+                    "manual"
+                  ]
+                },
+                {
+                  "id": "script",
+                  "label": "Script",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 240
+                },
+                {
+                  "id": "checks",
+                  "label": "Checks",
+                  "type": "group",
+                  "required": false,
+                  "properties": [
+                    {
+                      "id": "mustPass",
+                      "label": "Must Pass",
+                      "type": "boolean",
+                      "required": false
+                    },
+                    {
+                      "id": "labels",
+                      "label": "Labels",
+                      "type": "string-list",
+                      "required": false,
+                      "minItems": 0,
+                      "maxItems": 8
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "defaultValue": []
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "ready",
+            "active"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify",
+          "settings": {
+            "maxLength": "naming.slug.maxLength"
+          }
+        }
+      ],
+      "entitySingular": "iter5-playbook",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "iter5-retro-actions",
+      "label": "Iter5 Retro Actions",
+      "primaryField": "title",
+      "description": "Iter5 corrective actions derived from findings.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 180
+        },
+        {
+          "id": "findingId",
+          "label": "Finding",
+          "type": "reference",
+          "required": false,
+          "collectionId": "iter5-findings",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "ownerAuthorId",
+          "label": "Owner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "actionPlan",
+          "label": "Action Plan",
+          "type": "structured-object",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "summary",
+                  "label": "Summary",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 3,
+                  "maxLength": 200
+                },
+                {
+                  "id": "priority",
+                  "label": "Priority",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "low",
+                    "medium",
+                    "high"
+                  ]
+                },
+                {
+                  "id": "checklist",
+                  "label": "Checklist",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 12
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "open",
+            "in-progress",
+            "done"
+          ],
+          "defaultValue": "open"
+        }
+      ],
+      "entitySingular": "iter5-retro-action",
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    }
+  ],
+  "metadata": {
+    "owner": "reference-domain-runtime",
+    "maturity": "proof",
+    "recomposition": {
+      "stage": "stage-3",
+      "wave": "S3.1",
+      "pass": "capability-recomposition-pass1",
+      "timestampUtc": "2026-03-03T16:26:04.637Z",
+      "legacyModuleIds": [
+        "dispatches",
+        "iter1-assets",
+        "iter1-audiences",
+        "iter1-campaigns",
+        "iter1-dispatches",
+        "iter2-executions",
+        "iter3-drill-runs",
+        "iter3-incidents",
+        "iter4-dispatch-runs",
+        "iter4-incidents",
+        "iter4-response-plans",
+        "iter4-response-windows",
+        "iter5-findings",
+        "iter5-playbook-runs",
+        "iter5-playbooks",
+        "iter5-retro-actions",
+        "missions"
+      ]
+    }
+  }
+}
+

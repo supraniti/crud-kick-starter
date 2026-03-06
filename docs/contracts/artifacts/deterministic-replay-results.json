@@ -1,0 +1,343 @@
+{
+  "ok": true,
+  "timestamp": "2026-03-03T15:44:33.206Z",
+  "mission": "wordpress-admin-parity-mutation-v1",
+  "replays": [
+    {
+      "name": "pass-a-reference-parity",
+      "deterministic": true,
+      "runs": [
+        {
+          "runtimeModuleIds": [
+            "articles",
+            "authors",
+            "briefs",
+            "digests",
+            "dispatches",
+            "editors",
+            "iter1-assets",
+            "iter1-audiences",
+            "iter1-campaigns",
+            "iter1-dispatches",
+            "iter2-environments",
+            "iter2-executions",
+            "iter2-gates",
+            "iter2-release-plans",
+            "iter3-checkpoints",
+            "iter3-drill-plans",
+            "iter3-drill-runs",
+            "iter3-incidents",
+            "iter4-dispatch-runs",
+            "iter4-incidents",
+            "iter4-response-plans",
+            "iter4-response-windows",
+            "iter5-findings",
+            "iter5-playbook-runs",
+            "iter5-playbooks",
+            "iter5-retro-actions",
+            "missions",
+            "products",
+            "publishers",
+            "records",
+            "remotes",
+            "reviews",
+            "taxonomies",
+            "wpx-posts",
+            "wpx-publish-jobs",
+            "wpx-settings",
+            "wpx-taxonomies",
+            "wpx-terms"
+          ],
+          "taxonomySeedIds": {
+            "category": "wptx-001",
+            "tag": "wptx-002"
+          },
+          "filters": {
+            "statusPublishedCount": 1,
+            "byCategoryCount": 1,
+            "byTagCount": 1,
+            "byAuthorCount": 1
+          },
+          "publishJob": {
+            "terminalState": "completed",
+            "policyMode": "direct",
+            "requestedStatus": "published"
+          },
+          "deletePolicies": {
+            "restrictCode": "REFERENCE_DELETE_RESTRICTED",
+            "restrictGuidedAction": {
+              "id": "show-referencing-wpx-posts-authorid",
+              "type": "navigate",
+              "routeModuleId": "wpx-posts",
+              "routeCollectionId": "wpx-posts"
+            },
+            "nullifyPolicy": "nullify",
+            "postAuthorAfterNullifyIsNull": true
+          }
+        },
+        {
+          "runtimeModuleIds": [
+            "articles",
+            "authors",
+            "briefs",
+            "digests",
+            "dispatches",
+            "editors",
+            "iter1-assets",
+            "iter1-audiences",
+            "iter1-campaigns",
+            "iter1-dispatches",
+            "iter2-environments",
+            "iter2-executions",
+            "iter2-gates",
+            "iter2-release-plans",
+            "iter3-checkpoints",
+            "iter3-drill-plans",
+            "iter3-drill-runs",
+            "iter3-incidents",
+            "iter4-dispatch-runs",
+            "iter4-incidents",
+            "iter4-response-plans",
+            "iter4-response-windows",
+            "iter5-findings",
+            "iter5-playbook-runs",
+            "iter5-playbooks",
+            "iter5-retro-actions",
+            "missions",
+            "products",
+            "publishers",
+            "records",
+            "remotes",
+            "reviews",
+            "taxonomies",
+            "wpx-posts",
+            "wpx-publish-jobs",
+            "wpx-settings",
+            "wpx-taxonomies",
+            "wpx-terms"
+          ],
+          "taxonomySeedIds": {
+            "category": "wptx-001",
+            "tag": "wptx-002"
+          },
+          "filters": {
+            "statusPublishedCount": 1,
+            "byCategoryCount": 1,
+            "byTagCount": 1,
+            "byAuthorCount": 1
+          },
+          "publishJob": {
+            "terminalState": "completed",
+            "policyMode": "direct",
+            "requestedStatus": "published"
+          },
+          "deletePolicies": {
+            "restrictCode": "REFERENCE_DELETE_RESTRICTED",
+            "restrictGuidedAction": {
+              "id": "show-referencing-wpx-posts-authorid",
+              "type": "navigate",
+              "routeModuleId": "wpx-posts",
+              "routeCollectionId": "wpx-posts"
+            },
+            "nullifyPolicy": "nullify",
+            "postAuthorAfterNullifyIsNull": true
+          }
+        },
+        {
+          "runtimeModuleIds": [
+            "articles",
+            "authors",
+            "briefs",
+            "digests",
+            "dispatches",
+            "editors",
+            "iter1-assets",
+            "iter1-audiences",
+            "iter1-campaigns",
+            "iter1-dispatches",
+            "iter2-environments",
+            "iter2-executions",
+            "iter2-gates",
+            "iter2-release-plans",
+            "iter3-checkpoints",
+            "iter3-drill-plans",
+            "iter3-drill-runs",
+            "iter3-incidents",
+            "iter4-dispatch-runs",
+            "iter4-incidents",
+            "iter4-response-plans",
+            "iter4-response-windows",
+            "iter5-findings",
+            "iter5-playbook-runs",
+            "iter5-playbooks",
+            "iter5-retro-actions",
+            "missions",
+            "products",
+            "publishers",
+            "records",
+            "remotes",
+            "reviews",
+            "taxonomies",
+            "wpx-posts",
+            "wpx-publish-jobs",
+            "wpx-settings",
+            "wpx-taxonomies",
+            "wpx-terms"
+          ],
+          "taxonomySeedIds": {
+            "category": "wptx-001",
+            "tag": "wptx-002"
+          },
+          "filters": {
+            "statusPublishedCount": 1,
+            "byCategoryCount": 1,
+            "byTagCount": 1,
+            "byAuthorCount": 1
+          },
+          "publishJob": {
+            "terminalState": "completed",
+            "policyMode": "direct",
+            "requestedStatus": "published"
+          },
+          "deletePolicies": {
+            "restrictCode": "REFERENCE_DELETE_RESTRICTED",
+            "restrictGuidedAction": {
+              "id": "show-referencing-wpx-posts-authorid",
+              "type": "navigate",
+              "routeModuleId": "wpx-posts",
+              "routeCollectionId": "wpx-posts"
+            },
+            "nullifyPolicy": "nullify",
+            "postAuthorAfterNullifyIsNull": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "pass-b-mutation-stress",
+      "deterministic": true,
+      "runs": [
+        {
+          "settingsRoundTrip": {
+            "readingBehavior": "static-front",
+            "discussionBehavior": "closed",
+            "policyMode": "moderated",
+            "runtimeChannels": [
+              "web",
+              "email"
+            ],
+            "moderationStagesCount": 2,
+            "moderationProfileMode": "moderated"
+          },
+          "nestedRoundTrip": {
+            "editorialMetaDiscussionMode": "moderated",
+            "editorialMetaNotes": "Updated meta notes",
+            "distributionTargetChannels": [
+              "api"
+            ],
+            "moderationProfileMode": "moderated",
+            "moderationProfileChannels": [
+              "email",
+              "api"
+            ]
+          },
+          "publishPipeline": {
+            "asyncJobTerminalState": "blocked",
+            "asyncJobPolicyMode": "moderated",
+            "missionJobStatus": "succeeded",
+            "missionJobResultTerminalState": null,
+            "missionJobResultPolicyMode": null
+          },
+          "pluginFilterStance": {
+            "statusCode": 400,
+            "code": "WPX_POST_MODERATION_PROFILE_FILTER_UNSUPPORTED",
+            "fieldId": "moderationProfile"
+          },
+          "moduleSettingSnapshot": {
+            "authorDeletePolicy": "restrict"
+          }
+        },
+        {
+          "settingsRoundTrip": {
+            "readingBehavior": "static-front",
+            "discussionBehavior": "closed",
+            "policyMode": "moderated",
+            "runtimeChannels": [
+              "web",
+              "email"
+            ],
+            "moderationStagesCount": 2,
+            "moderationProfileMode": "moderated"
+          },
+          "nestedRoundTrip": {
+            "editorialMetaDiscussionMode": "moderated",
+            "editorialMetaNotes": "Updated meta notes",
+            "distributionTargetChannels": [
+              "api"
+            ],
+            "moderationProfileMode": "moderated",
+            "moderationProfileChannels": [
+              "email",
+              "api"
+            ]
+          },
+          "publishPipeline": {
+            "asyncJobTerminalState": "blocked",
+            "asyncJobPolicyMode": "moderated",
+            "missionJobStatus": "succeeded",
+            "missionJobResultTerminalState": null,
+            "missionJobResultPolicyMode": null
+          },
+          "pluginFilterStance": {
+            "statusCode": 400,
+            "code": "WPX_POST_MODERATION_PROFILE_FILTER_UNSUPPORTED",
+            "fieldId": "moderationProfile"
+          },
+          "moduleSettingSnapshot": {
+            "authorDeletePolicy": "restrict"
+          }
+        },
+        {
+          "settingsRoundTrip": {
+            "readingBehavior": "static-front",
+            "discussionBehavior": "closed",
+            "policyMode": "moderated",
+            "runtimeChannels": [
+              "web",
+              "email"
+            ],
+            "moderationStagesCount": 2,
+            "moderationProfileMode": "moderated"
+          },
+          "nestedRoundTrip": {
+            "editorialMetaDiscussionMode": "moderated",
+            "editorialMetaNotes": "Updated meta notes",
+            "distributionTargetChannels": [
+              "api"
+            ],
+            "moderationProfileMode": "moderated",
+            "moderationProfileChannels": [
+              "email",
+              "api"
+            ]
+          },
+          "publishPipeline": {
+            "asyncJobTerminalState": "blocked",
+            "asyncJobPolicyMode": "moderated",
+            "missionJobStatus": "succeeded",
+            "missionJobResultTerminalState": null,
+            "missionJobResultPolicyMode": null
+          },
+          "pluginFilterStance": {
+            "statusCode": 400,
+            "code": "WPX_POST_MODERATION_PROFILE_FILTER_UNSUPPORTED",
+            "fieldId": "moderationProfile"
+          },
+          "moduleSettingSnapshot": {
+            "authorDeletePolicy": "restrict"
+          }
+        }
+      ]
+    }
+  ]
+}

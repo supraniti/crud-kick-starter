@@ -1,0 +1,233 @@
+{
+  "schema_version": "lane-manifest-v1",
+  "owner_surface": "frontend",
+  "generated_on": "2026-02-21",
+  "source_artifacts": [
+    "docs/contracts/contract-index.md",
+    "docs/contracts/quality-gate-contract.md"
+  ],
+  "module_scope": {
+    "status": "active",
+    "ownership_mode": "test-modules-authoritative",
+    "active_module_ids": [
+      "test-modules-crud-core",
+      "test-modules-relations-taxonomy",
+      "test-modules-settings-policy",
+      "test-modules-operations-dispatch",
+      "test-modules-remotes-publish"
+    ],
+    "module_id_alias_map": "docs/contracts/artifacts/module-id-alias-map-v1.json"
+  },
+  "entries": [
+    {
+      "test_file_path": "frontend/src/tests/app-integration/app-shell-routing.actions.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-APP-003"
+      ],
+      "capability_tags": [
+        "route-actions-navigation"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/app-shell-routing.navigation.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-APP-001"
+      ],
+      "capability_tags": [
+        "app-shell-routing"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/module-conformance/collections-crud.lifecycle.module-conformance.test.jsx",
+      "lane": "frontend-conformance",
+      "flow_ids": [
+        "FLOW-FE-CRUD-001"
+      ],
+      "capability_tags": [
+        "collections-crud-ui",
+        "cross-collection-crud-workflow",
+        "schema-driven-status-options"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/module-conformance/collections-crud.reference-policies.module-conformance.test.jsx",
+      "lane": "frontend-conformance",
+      "flow_ids": [
+        "FLOW-FE-CRUD-002"
+      ],
+      "capability_tags": [
+        "delete-policy-guided-action",
+        "inline-reference-create"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/module-conformance/collections-crud.validation-diagnostics.module-conformance.test.jsx",
+      "lane": "frontend-conformance",
+      "flow_ids": [
+        "FLOW-FE-CRUD-003"
+      ],
+      "capability_tags": [
+        "aggregated-conflict-envelope",
+        "unsupported-diagnostics"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/collections-domain.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-DOMAIN-001",
+        "FLOW-FE-DOMAIN-002"
+      ],
+      "capability_tags": [
+        "collections-domain-normalization",
+        "reference-key-derivation"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/collections-field-registry.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-FIELD-001",
+        "FLOW-FE-FIELD-002"
+      ],
+      "capability_tags": [
+        "collections-field-registry",
+        "unsupported-diagnostics"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/dispatches-route-adapter.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-DISPATCH-001"
+      ],
+      "capability_tags": [
+        "dispatch-route-state-adapter"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/app-shell-hydration.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-APP-002"
+      ],
+      "capability_tags": [
+        "app-shell-routing",
+        "workspace-hydration-isolation"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/view-registry.descriptor.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-REGISTRY-001"
+      ],
+      "capability_tags": [
+        "view-registry"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/view-registry.entrypoint.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-REGISTRY-002"
+      ],
+      "capability_tags": [
+        "route-entrypoint-resolution"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/deploy-remotes.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-DEPLOY-001"
+      ],
+      "capability_tags": [
+        "deploy-remotes-ui"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/mission-operator.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-MISSION-001"
+      ],
+      "capability_tags": [
+        "mission-operator-ui"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/module-lifecycle-collection-availability.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-LIFECYCLE-002"
+      ],
+      "capability_tags": [
+        "module-lifecycle-collection-availability"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/module-lifecycle-runtime.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-LIFECYCLE-001"
+      ],
+      "capability_tags": [
+        "module-runtime-lifecycle-controls"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/module-settings.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-SETTINGS-001",
+        "FLOW-FE-SETTINGS-002"
+      ],
+      "capability_tags": [
+        "module-settings-disabled-read",
+        "module-settings-ui"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/app-integration/products-taxonomies.integration.test.jsx",
+      "lane": "frontend-integration",
+      "flow_ids": [
+        "FLOW-FE-TAXONOMY-001"
+      ],
+      "capability_tags": [
+        "taxonomy-safeguard-ui"
+      ],
+      "migration_phase": "phase-3"
+    },
+    {
+      "test_file_path": "frontend/src/tests/core/reference-api.core.test.jsx",
+      "lane": "core-fast",
+      "flow_ids": [
+        "FLOW-FE-API-001"
+      ],
+      "capability_tags": [
+        "reference-api-filter-forwarding"
+      ],
+      "migration_phase": "phase-3"
+    }
+  ]
+}
+

@@ -1,0 +1,306 @@
+{
+  "contractVersion": 1,
+  "packId": "m22-step-a-baseline",
+  "description": "Baseline drift-detection scenarios for post-M21 realignment invariants.",
+  "scenarios": [
+    {
+      "id": "collection-mutation-deploy-parity",
+      "description": "Collection create/update/delete responses must stay coherent with immediate deploy-state reads.",
+      "steps": [
+        {
+          "id": "create-record",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/records/items",
+            "body": {
+              "title": "M22 API Runner {{runToken}}",
+              "status": "draft",
+              "score": 50,
+              "featured": false,
+              "publishedOn": null,
+              "noteIds": []
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.deploy.deployRequired",
+                "value": true
+              }
+            ]
+          },
+          "capture": {
+            "recordId": "body.item.id",
+            "createCurrentRevision": "body.deploy.currentRevision",
+            "createDeployRequired": "body.deploy.deployRequired",
+            "createLastMutationAt": "body.deploy.lastMutationAt"
+          }
+        },
+        {
+          "id": "read-deploy-after-create",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/deploy/state"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.deploy.currentRevision",
+                "fromVar": "createCurrentRevision"
+              },
+              {
+                "path": "body.deploy.deployRequired",
+                "fromVar": "createDeployRequired"
+              },
+              {
+                "path": "body.deploy.lastMutationAt",
+                "fromVar": "createLastMutationAt"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-record",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/records/items/{{recordId}}",
+            "body": {
+              "score": 51
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              }
+            ]
+          },
+          "capture": {
+            "updateCurrentRevision": "body.deploy.currentRevision",
+            "updateDeployRequired": "body.deploy.deployRequired",
+            "updateLastMutationAt": "body.deploy.lastMutationAt"
+          }
+        },
+        {
+          "id": "read-deploy-after-update",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/deploy/state"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.deploy.currentRevision",
+                "fromVar": "updateCurrentRevision"
+              },
+              {
+                "path": "body.deploy.deployRequired",
+                "fromVar": "updateDeployRequired"
+              },
+              {
+                "path": "body.deploy.lastMutationAt",
+                "fromVar": "updateLastMutationAt"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-record",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/records/items/{{recordId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "recordId"
+              }
+            ]
+          },
+          "capture": {
+            "deleteCurrentRevision": "body.deploy.currentRevision",
+            "deleteDeployRequired": "body.deploy.deployRequired",
+            "deleteLastMutationAt": "body.deploy.lastMutationAt"
+          }
+        },
+        {
+          "id": "read-deploy-after-delete",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/deploy/state"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.deploy.currentRevision",
+                "fromVar": "deleteCurrentRevision"
+              },
+              {
+                "path": "body.deploy.deployRequired",
+                "fromVar": "deleteDeployRequired"
+              },
+              {
+                "path": "body.deploy.lastMutationAt",
+                "fromVar": "deleteLastMutationAt"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mission-payload-contract-truthfulness",
+      "description": "Mission metadata and validator behavior must remain aligned to runtime payload contract.",
+      "steps": [
+        {
+          "id": "list-missions",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/missions"
+          },
+          "expect": {
+            "status": 200,
+            "containsObject": [
+              {
+                "path": "body.items",
+                "value": {
+                  "missionId": "remote-deploy-mission",
+                  "payload": {
+                    "fields": [
+                      {
+                        "id": "remoteId"
+                      },
+                      {
+                        "id": "shouldFail"
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "notContainsObject": [
+              {
+                "path": "body.items",
+                "value": {
+                  "missionId": "remote-deploy-mission",
+                  "payload": {
+                    "fields": [
+                      {
+                        "id": "hold"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "submit-invalid-hold",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/missions/remote-deploy-mission/jobs",
+            "body": {
+              "hold": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "MISSION_PAYLOAD_INVALID"
+              },
+              {
+                "path": "body.validation.code",
+                "value": "REMOTE_DEPLOY_PAYLOAD_FIELD_UNKNOWN"
+              },
+              {
+                "path": "body.validation.fieldId",
+                "value": "hold"
+              }
+            ]
+          }
+        },
+        {
+          "id": "submit-valid-mission",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/missions/remote-deploy-mission/jobs",
+            "body": {
+              "remoteId": null,
+              "shouldFail": false
+            }
+          },
+          "expect": {
+            "status": 202,
+            "equals": [
+              {
+                "path": "body.job.payload.remoteId",
+                "value": null
+              },
+              {
+                "path": "body.job.payload.shouldFail",
+                "value": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "persistence-policy-visibility",
+      "description": "Runtime metadata must expose explicit fail-fast policy with no hidden fallback when fallback is disabled.",
+      "steps": [
+        {
+          "id": "read-runtime-metadata",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.referenceStatePersistence.enabled",
+                "value": true
+              },
+              {
+                "path": "body.runtime.referenceStatePersistence.configuredMode",
+                "value": "memory"
+              },
+              {
+                "path": "body.runtime.referenceStatePersistence.runtimeMode",
+                "value": "memory"
+              },
+              {
+                "path": "body.runtime.referenceStatePersistence.allowMemoryFallback",
+                "value": false
+              },
+              {
+                "path": "body.runtime.referenceStatePersistence.failFast",
+                "value": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

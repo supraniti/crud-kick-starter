@@ -1,0 +1,172 @@
+{
+  "contractVersion": 1,
+  "id": "authors",
+  "version": "0.1.0",
+  "name": "Authors Module",
+  "capabilities": [
+    "ui.route",
+    "schema",
+    "crud.collection",
+    "settings",
+    "service"
+  ],
+  "lifecycle": {
+    "install": "authors.install",
+    "uninstall": "authors.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "editorialMode",
+        "label": "Editorial Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "strict",
+            "label": "Strict"
+          }
+        ],
+        "defaultValue": "standard",
+        "description": "Controls author validation strictness for editorial workflows."
+      },
+      {
+        "id": "requireReview",
+        "label": "Require Review",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Require review before publishing author profiles."
+      },
+      {
+        "id": "defaultCategory",
+        "label": "Default Category",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "news",
+            "label": "News"
+          },
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "ops",
+            "label": "Ops"
+          }
+        ],
+        "defaultValue": "news",
+        "description": "Applied when editors create new author profiles."
+      },
+      {
+        "id": "webhookToken",
+        "label": "Webhook Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Token used by external profile sync webhooks."
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Authors",
+      "icon": "group",
+      "order": 26
+    }
+  },
+  "collections": [
+    {
+      "id": "authors",
+      "label": "Authors",
+      "primaryField": "title",
+      "description": "Author profiles managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Name",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "owner": "reference-slice",
+    "maturity": "proof"
+  }
+}

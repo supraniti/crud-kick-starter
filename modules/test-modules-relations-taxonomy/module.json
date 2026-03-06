@@ -1,0 +1,652 @@
+{
+  "contractVersion": 1,
+  "id": "test-modules-relations-taxonomy",
+  "version": "0.1.0",
+  "name": "Test Modules Relations Taxonomy Module",
+  "capabilities": [
+    "crud.collection",
+    "schema",
+    "service",
+    "settings",
+    "ui.route"
+  ],
+  "lifecycle": {
+    "install": "test-modules-relations-taxonomy.install",
+    "uninstall": "test-modules-relations-taxonomy.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "defaultCategory",
+        "label": "Default Category",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "news",
+            "label": "News"
+          },
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "ops",
+            "label": "Ops"
+          }
+        ],
+        "defaultValue": "news",
+        "description": "Applied when editors create new author profiles."
+      },
+      {
+        "id": "editorialMode",
+        "label": "Editorial Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "strict",
+            "label": "Strict"
+          }
+        ],
+        "defaultValue": "standard",
+        "description": "Controls author validation strictness for editorial workflows."
+      },
+      {
+        "id": "requireReview",
+        "label": "Require Review",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Require review before publishing author profiles."
+      },
+      {
+        "id": "webhookToken",
+        "label": "Webhook Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Token used by external profile sync webhooks."
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Test Modules Relations Taxonomy",
+      "icon": "hub",
+      "order": 420
+    },
+    "routeView": {
+      "kind": "collections",
+      "viewId": "test-modules-relations-taxonomy",
+      "capabilities": {
+        "usesCollectionsDomain": true
+      },
+      "bannerMessage": "Module-owned view entrypoint: Test Modules Relations Taxonomy"
+    }
+  },
+  "collections": [
+    {
+      "id": "authors",
+      "label": "Authors",
+      "primaryField": "title",
+      "description": "Author profiles managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Name",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "editors",
+      "label": "Editors",
+      "primaryField": "title",
+      "description": "Editors managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "bio",
+          "label": "Bio",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 240
+        },
+        {
+          "id": "mentorId",
+          "label": "Mentor Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors"
+        },
+        {
+          "id": "focusAreas",
+          "label": "Focus Areas",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "newsroom",
+            "standards",
+            "style"
+          ]
+        },
+        {
+          "id": "editorialScore",
+          "label": "Editorial Score",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "verified",
+          "label": "Verified",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "id": "bioSlug",
+          "label": "Bio Slug",
+          "type": "computed",
+          "required": false,
+          "source": "bio",
+          "transform": "slugify"
+        },
+        {
+          "id": "bioCode",
+          "label": "Bio Code",
+          "type": "computed",
+          "required": false,
+          "source": "bio",
+          "transform": "uppercase"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "publishers",
+      "label": "Publishers",
+      "primaryField": "title",
+      "description": "Publishers managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Name",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "partnerAuthorId",
+          "label": "Partner Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors"
+        },
+        {
+          "id": "editionCount",
+          "label": "Edition Count",
+          "type": "number",
+          "required": false,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "id": "publiclyListed",
+          "label": "Publicly Listed",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "id": "imprintCode",
+          "label": "Imprint Code",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "transform": "uppercase"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "label": "Reviews",
+      "primaryField": "title",
+      "description": "Reviews managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "transform": "slugify"
+        }
+      ],
+      "behavior": {
+        "enforceTitleUnique": false,
+        "requirePublishedOnWhenPublished": false
+      }
+    },
+    {
+      "id": "wpx-taxonomies",
+      "label": "WPX Taxonomies",
+      "entitySingular": "wpx-taxonomy",
+      "primaryField": "title",
+      "description": "Category/tag taxonomy definitions used by WPX terms and posts.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "taxonomyKey",
+          "label": "Taxonomy Key",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "category",
+            "tag"
+          ],
+          "defaultValue": "category"
+        },
+        {
+          "id": "hierarchical",
+          "label": "Hierarchical",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        },
+        {
+          "id": "description",
+          "label": "Description",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 180
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify"
+        }
+      ],
+      "behavior": {
+        "enforcePrimaryFieldUnique": true
+      }
+    },
+    {
+      "id": "wpx-terms",
+      "label": "WPX Terms",
+      "entitySingular": "wpx-term",
+      "primaryField": "title",
+      "description": "WordPress-like taxonomy terms with hierarchical category rules.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 120
+        },
+        {
+          "id": "taxonomyId",
+          "label": "Taxonomy",
+          "type": "reference",
+          "required": true,
+          "collectionId": "wpx-taxonomies",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true
+          }
+        },
+        {
+          "id": "taxonomyKind",
+          "label": "Taxonomy Kind",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "category",
+            "tag"
+          ],
+          "defaultValue": "category"
+        },
+        {
+          "id": "parentTermId",
+          "label": "Parent Term",
+          "type": "reference",
+          "required": false,
+          "collectionId": "wpx-terms",
+          "labelField": "title",
+          "onDelete": "nullify",
+          "referenceUi": {
+            "optionsFilter": {
+              "fieldId": "taxonomyKind",
+              "sourceFieldId": "taxonomyKind"
+            },
+            "visibleWhen": {
+              "sourceFieldId": "taxonomyId",
+              "collectionId": "wpx-taxonomies",
+              "matchField": "id",
+              "valueField": "hierarchical",
+              "equals": true
+            }
+          }
+        },
+        {
+          "id": "description",
+          "label": "Description",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 180
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify"
+        }
+      ],
+      "behavior": {
+        "enforcePrimaryFieldUnique": true
+      }
+    }
+  ],
+  "metadata": {
+    "owner": "reference-domain-runtime",
+    "maturity": "proof",
+    "recomposition": {
+      "stage": "stage-3",
+      "wave": "S3.1",
+      "pass": "capability-recomposition-pass1",
+      "timestampUtc": "2026-03-03T16:26:04.637Z",
+      "legacyModuleIds": [
+        "authors",
+        "editors",
+        "publishers",
+        "reviews",
+        "taxonomies",
+        "wpx-taxonomies",
+        "wpx-terms"
+      ]
+    }
+  }
+}
+

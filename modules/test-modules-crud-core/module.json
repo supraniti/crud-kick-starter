@@ -1,0 +1,341 @@
+{
+  "contractVersion": 1,
+  "id": "test-modules-crud-core",
+  "version": "0.1.0",
+  "name": "Test Modules CRUD Core Module",
+  "capabilities": [
+    "crud.collection",
+    "schema",
+    "service",
+    "settings",
+    "ui.route"
+  ],
+  "lifecycle": {
+    "install": "test-modules-crud-core.install",
+    "uninstall": "test-modules-crud-core.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "defaultCategory",
+        "label": "Default Category",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "news",
+            "label": "News"
+          },
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "ops",
+            "label": "Ops"
+          }
+        ],
+        "defaultValue": "news",
+        "description": "Applied when authors create new articles."
+      },
+      {
+        "id": "editorialMode",
+        "label": "Editorial Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "strict",
+            "label": "Strict"
+          }
+        ],
+        "defaultValue": "standard",
+        "description": "Controls article validation strictness for editorial workflows."
+      },
+      {
+        "id": "requireReview",
+        "label": "Require Review",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Require review before publishing articles."
+      },
+      {
+        "id": "webhookToken",
+        "label": "Webhook Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Token used by external publish webhooks."
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Test Modules CRUD Core",
+      "icon": "dataset",
+      "order": 410
+    },
+    "routeView": {
+      "kind": "collections",
+      "viewId": "test-modules-crud-core",
+      "capabilities": {
+        "usesCollectionsDomain": true
+      },
+      "bannerMessage": "Module-owned view entrypoint: Test Modules CRUD Core"
+    }
+  },
+  "collections": [
+    {
+      "id": "articles",
+      "label": "Articles",
+      "primaryField": "title",
+      "description": "Editorial articles managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notes",
+      "primaryField": "title",
+      "description": "Expanded schema/type collection for M8 field-matrix coverage.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "general",
+            "tech",
+            "ops"
+          ]
+        },
+        {
+          "id": "priority",
+          "label": "Priority",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "action",
+            "ops",
+            "ui",
+            "backend",
+            "release"
+          ]
+        },
+        {
+          "id": "pinned",
+          "label": "Pinned",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "id": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "records",
+      "label": "Records",
+      "primaryField": "title",
+      "description": "Generic CRUD baseline collection for M7 validation.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "score",
+          "label": "Score",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "noteIds",
+          "label": "Linked Notes",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "notes"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "owner": "reference-domain-runtime",
+    "maturity": "proof",
+    "recomposition": {
+      "stage": "stage-3",
+      "wave": "S3.1",
+      "pass": "capability-recomposition-pass1",
+      "timestampUtc": "2026-03-03T16:26:04.637Z",
+      "legacyModuleIds": [
+        "articles",
+        "products",
+        "records"
+      ]
+    }
+  }
+}
+

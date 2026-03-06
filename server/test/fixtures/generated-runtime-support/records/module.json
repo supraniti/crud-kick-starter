@@ -1,0 +1,184 @@
+{
+  "contractVersion": 1,
+  "id": "records",
+  "version": "0.1.0",
+  "name": "Records Module",
+  "capabilities": [
+    "ui.route",
+    "schema",
+    "crud.collection"
+  ],
+  "lifecycle": {
+    "install": "records.install",
+    "uninstall": "records.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "persistence": "./server/persistence-plugins.mjs"
+  },
+  "ui": {
+    "navigation": {
+      "label": "Records",
+      "icon": "dataset",
+      "order": 20
+    },
+    "routeView": {
+      "kind": "collections"
+    }
+  },
+  "collections": [
+    {
+      "id": "records",
+      "label": "Records",
+      "primaryField": "title",
+      "description": "Generic CRUD baseline collection for M7 validation.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "score",
+          "label": "Score",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "noteIds",
+          "label": "Linked Notes",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "notes"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "Notes",
+      "primaryField": "title",
+      "description": "Expanded schema/type collection for M8 field-matrix coverage.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "general",
+            "tech",
+            "ops"
+          ]
+        },
+        {
+          "id": "priority",
+          "label": "Priority",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "action",
+            "ops",
+            "ui",
+            "backend",
+            "release"
+          ]
+        },
+        {
+          "id": "pinned",
+          "label": "Pinned",
+          "type": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "id": "dueDate",
+          "label": "Due Date",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "source": "title"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "owner": "reference-slice",
+    "maturity": "baseline"
+  }
+}

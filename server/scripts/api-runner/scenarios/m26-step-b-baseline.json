@@ -1,0 +1,1926 @@
+{
+  "contractVersion": 1,
+  "packId": "m26-step-b-baseline",
+  "description": "Step-B live API evidence for articles + authors + publishers + editors + reviews + briefs + digests module behavior plus preserved critical lane.",
+  "scenarios": [
+    {
+      "id": "articles-settings-and-crud-contract",
+      "description": "Articles runtime visibility, settings redaction/write behavior, and CRUD lifecycle should remain deterministic.",
+      "steps": [
+        {
+          "id": "runtime-exposes-articles-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.articles-index-service",
+                "fromVar": "targetModuleIds.articles"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.articles",
+                "fromVar": "targetModuleIds.articles"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-articles-settings-defaults",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/settings/modules/{{moduleIds.articles}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-articles-settings",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/settings/modules/{{moduleIds.articles}}",
+            "body": {
+              "editorialMode": "strict",
+              "requireReview": false,
+              "defaultCategory": "guide",
+              "webhookToken": "api-runner-{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.settings.values.editorialMode",
+                "value": "strict"
+              },
+              {
+                "path": "body.settings.values.requireReview",
+                "value": false
+              },
+              {
+                "path": "body.settings.values.defaultCategory",
+                "value": "guide"
+              },
+              {
+                "path": "body.settings.values.webhookToken",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-article-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/articles/items",
+            "body": {
+              "title": "Unknown field article {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ARTICLE_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-article-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/articles/items",
+            "body": {
+              "title": "M26 API Runner Article {{runToken}}",
+              "status": "review",
+              "category": "guide",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001"
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "review"
+              },
+              {
+                "path": "body.item.category",
+                "value": "guide"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              }
+            ]
+          },
+          "capture": {
+            "articleId": "body.item.id"
+          }
+        },
+        {
+          "id": "list-articles-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/articles/items",
+            "query": {
+              "status": "review",
+              "category": "guide",
+              "labels": "featured,engineering",
+              "recordId": "rec-001",
+              "search": "{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "articleId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-article-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/articles/items/{{articleId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ARTICLE_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-article-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/articles/items/{{articleId}}",
+            "body": {
+              "title": "M26 API Runner Article Updated {{runToken}}",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "articleId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": "2026-02-14"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-article",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/articles/items/{{articleId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "articleId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-article",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/articles/items/{{articleId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "authors-settings-and-crud-contract",
+      "description": "Authors runtime visibility, settings redaction/write behavior, and CRUD lifecycle should remain deterministic.",
+      "steps": [
+        {
+          "id": "runtime-exposes-authors-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.authors-index-service",
+                "fromVar": "targetModuleIds.authors"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.authors",
+                "fromVar": "targetModuleIds.authors"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-authors-settings-defaults",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/settings/modules/{{moduleIds.authors}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-authors-settings",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/settings/modules/{{moduleIds.authors}}",
+            "body": {
+              "editorialMode": "strict",
+              "requireReview": false,
+              "defaultCategory": "guide",
+              "webhookToken": "api-runner-{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.settings.values.editorialMode",
+                "value": "strict"
+              },
+              {
+                "path": "body.settings.values.requireReview",
+                "value": false
+              },
+              {
+                "path": "body.settings.values.defaultCategory",
+                "value": "guide"
+              },
+              {
+                "path": "body.settings.values.webhookToken",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-author-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/authors/items",
+            "body": {
+              "title": "Unknown field author {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "AUTHOR_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-author-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/authors/items",
+            "body": {
+              "title": "M28 API Runner Author {{runToken}}",
+              "status": "review",
+              "category": "guide",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001"
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "review"
+              },
+              {
+                "path": "body.item.category",
+                "value": "guide"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              }
+            ]
+          },
+          "capture": {
+            "authorId": "body.item.id"
+          }
+        },
+        {
+          "id": "list-authors-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/authors/items",
+            "query": {
+              "status": "review",
+              "category": "guide",
+              "labels": "featured,engineering",
+              "recordId": "rec-001",
+              "search": "{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "authorId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-author-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/authors/items/{{authorId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "AUTHOR_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-author-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/authors/items/{{authorId}}",
+            "body": {
+              "title": "M28 API Runner Author Updated {{runToken}}",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "authorId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": "2026-02-14"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-author",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/authors/items/{{authorId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "authorId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-author",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/authors/items/{{authorId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "publishers-settings-and-crud-contract",
+      "description": "Publishers runtime visibility, settings redaction/write behavior, and CRUD lifecycle should remain deterministic.",
+      "steps": [
+        {
+          "id": "runtime-exposes-publishers-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.publishers-index-service",
+                "fromVar": "targetModuleIds.publishers"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.publishers",
+                "fromVar": "targetModuleIds.publishers"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-publishers-settings-defaults",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/settings/modules/{{moduleIds.publishers}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-publishers-settings",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/settings/modules/{{moduleIds.publishers}}",
+            "body": {
+              "editorialMode": "strict",
+              "requireReview": false,
+              "defaultCategory": "guide",
+              "webhookToken": "api-runner-{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.settings.values.editorialMode",
+                "value": "strict"
+              },
+              {
+                "path": "body.settings.values.requireReview",
+                "value": false
+              },
+              {
+                "path": "body.settings.values.defaultCategory",
+                "value": "guide"
+              },
+              {
+                "path": "body.settings.values.webhookToken",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-publisher-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/publishers/items",
+            "body": {
+              "title": "Unknown field publisher {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "PUBLISHER_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-publisher-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/publishers/items",
+            "body": {
+              "title": "M29 API Runner Publisher {{runToken}}",
+              "status": "review",
+              "category": "guide",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001",
+              "editionCount": 12,
+              "publiclyListed": true
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "review"
+              },
+              {
+                "path": "body.item.category",
+                "value": "guide"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              },
+              {
+                "path": "body.item.editionCount",
+                "value": 12
+              },
+              {
+                "path": "body.item.publiclyListed",
+                "value": true
+              }
+            ]
+          },
+          "capture": {
+            "publisherId": "body.item.id"
+          }
+        },
+        {
+          "id": "list-publishers-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/publishers/items",
+            "query": {
+              "status": "review",
+              "category": "guide",
+              "labels": "featured,engineering",
+              "recordId": "rec-001",
+              "editionCount": "12",
+              "publiclyListed": "true",
+              "search": "{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "publisherId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-publisher-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/publishers/items/{{publisherId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "PUBLISHER_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-publisher-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/publishers/items/{{publisherId}}",
+            "body": {
+              "title": "M29 API Runner Publisher Updated {{runToken}}",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002",
+              "editionCount": 44,
+              "publiclyListed": false
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "publisherId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": "2026-02-14"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              },
+              {
+                "path": "body.item.editionCount",
+                "value": 44
+              },
+              {
+                "path": "body.item.publiclyListed",
+                "value": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-publisher",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/publishers/items/{{publisherId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "publisherId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-publisher",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/publishers/items/{{publisherId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "editors-settings-and-crud-contract",
+      "description": "Editors runtime visibility, settings redaction/write behavior, and CRUD lifecycle should remain deterministic.",
+      "steps": [
+        {
+          "id": "runtime-exposes-editors-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.editors-index-service",
+                "fromVar": "targetModuleIds.editors"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.editors",
+                "fromVar": "targetModuleIds.editors"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-editors-settings-defaults",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/settings/modules/{{moduleIds.editors}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-editors-settings",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/settings/modules/{{moduleIds.editors}}",
+            "body": {
+              "editorialMode": "strict",
+              "requireReview": false,
+              "defaultCategory": "guide",
+              "webhookToken": "api-runner-{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.settings.values.editorialMode",
+                "value": "strict"
+              },
+              {
+                "path": "body.settings.values.requireReview",
+                "value": false
+              },
+              {
+                "path": "body.settings.values.defaultCategory",
+                "value": "guide"
+              },
+              {
+                "path": "body.settings.values.webhookToken",
+                "value": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-editor-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/editors/items",
+            "body": {
+              "title": "Unknown field editor {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "EDITOR_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-editor-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/editors/items",
+            "body": {
+              "title": "M30 API Runner Editor {{runToken}}",
+              "status": "review",
+              "category": "guide",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001"
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "review"
+              },
+              {
+                "path": "body.item.category",
+                "value": "guide"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              }
+            ]
+          },
+          "capture": {
+            "editorId": "body.item.id"
+          }
+        },
+        {
+          "id": "list-editors-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/editors/items",
+            "query": {
+              "status": "review",
+              "category": "guide",
+              "labels": "featured,engineering",
+              "recordId": "rec-001",
+              "search": "{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "editorId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-editor-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/editors/items/{{editorId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "EDITOR_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-editor-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/editors/items/{{editorId}}",
+            "body": {
+              "title": "M30 API Runner Editor Updated {{runToken}}",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "editorId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": "2026-02-14"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-editor",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/editors/items/{{editorId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "editorId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-editor",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/editors/items/{{editorId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "reviews-behavior-descriptor-proof",
+      "description": "Reviews module proves descriptor-owned behavior overrides (published-on requirement + title uniqueness) without core branching.",
+      "steps": [
+        {
+          "id": "runtime-exposes-reviews-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.reviews-index-service",
+                "fromVar": "targetModuleIds.reviews"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.reviews",
+                "fromVar": "targetModuleIds.reviews"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-review-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/reviews/items",
+            "body": {
+              "title": "Unknown field review {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "REVIEW_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-review-valid-first",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/reviews/items",
+            "body": {
+              "title": "M43 API Runner Review {{runToken}}",
+              "status": "published",
+              "category": "news",
+              "labels": [
+                "featured"
+              ],
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": null
+              }
+            ]
+          },
+          "capture": {
+            "reviewIdOne": "body.item.id"
+          }
+        },
+        {
+          "id": "create-review-valid-duplicate-title",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/reviews/items",
+            "body": {
+              "title": "M43 API Runner Review {{runToken}}",
+              "status": "published",
+              "category": "ops",
+              "labels": [],
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.publishedOn",
+                "value": null
+              }
+            ]
+          },
+          "capture": {
+            "reviewIdTwo": "body.item.id"
+          }
+        },
+        {
+          "id": "list-reviews-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/reviews/items",
+            "query": {
+              "status": "published",
+              "search": "{{runToken}}"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 2
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-review-one",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/reviews/items/{{reviewIdOne}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "reviewIdOne"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-review-two",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/reviews/items/{{reviewIdTwo}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "reviewIdTwo"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "briefs-non-slug-computed-resolver-proof",
+      "description": "Briefs module proves manifest defaults plus non-slug computed resolver behavior (uppercase + identity + titlecase) and url field validation under generated runtime boundaries without core branching.",
+      "steps": [
+        {
+          "id": "runtime-exposes-briefs-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.briefs-index-service",
+                "fromVar": "targetModuleIds.briefs"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.briefs",
+                "fromVar": "targetModuleIds.briefs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-brief-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/briefs/items",
+            "body": {
+              "title": "Unknown field brief {{runToken}}",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "BRIEF_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-brief-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/briefs/items",
+            "body": {
+              "title": "M44 API Runner Brief Proof",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001",
+              "summary": "Resolver proof summary for briefs",
+              "sourceUrl": "https://briefs.example.test/m44-api-proof"
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "draft"
+              },
+              {
+                "path": "body.item.category",
+                "value": "news"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              },
+              {
+                "path": "body.item.headlineCode",
+                "value": "M44 API RUNNER BRIEF PROOF"
+              },
+              {
+                "path": "body.item.headlineEcho",
+                "value": "M44 API Runner Brief Proof"
+              },
+              {
+                "path": "body.item.headlineTitle",
+                "value": "M44 Api Runner Brief Proof"
+              }
+            ]
+          },
+          "capture": {
+            "briefId": "body.item.id"
+          }
+        },
+        {
+          "id": "update-brief-rejects-invalid-source-url",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/briefs/items/{{briefId}}",
+            "body": {
+              "sourceUrl": "ftp://briefs.example.test/invalid"
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "BRIEF_SOURCE_URL_INVALID_URL"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-brief-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/briefs/items/{{briefId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "BRIEF_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-brief-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/briefs/items/{{briefId}}",
+            "body": {
+              "title": "M44 API Runner Brief Proof Updated",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002",
+              "summary": "Updated resolver proof summary for briefs",
+              "sourceUrl": "https://briefs.example.test/m44-api-proof-updated"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "briefId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              },
+              {
+                "path": "body.item.headlineCode",
+                "value": "M44 API RUNNER BRIEF PROOF UPDATED"
+              },
+              {
+                "path": "body.item.headlineEcho",
+                "value": "M44 API Runner Brief Proof Updated"
+              },
+              {
+                "path": "body.item.headlineTitle",
+                "value": "M44 Api Runner Brief Proof Updated"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list-briefs-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/briefs/items",
+            "query": {
+              "status": "published",
+              "category": "ops",
+              "recordId": "rec-002",
+              "search": "m44 api runner brief proof"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "briefId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-brief",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/briefs/items/{{briefId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "briefId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-brief",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/briefs/items/{{briefId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "digests-multi-resolver-catalog-proof",
+      "description": "Digests module proves manifest defaults plus shared resolver-catalog multi-token behavior (slugify + uppercase + identity + lowercase + titlecase) and url field validation under generated runtime boundaries.",
+      "steps": [
+        {
+          "id": "runtime-exposes-digests-boundaries",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/modules/runtime"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.runtime.serviceModuleMap.digests-index-service",
+                "fromVar": "targetModuleIds.digests"
+              },
+              {
+                "path": "body.runtime.collectionRepositoryModuleMap.digests",
+                "fromVar": "targetModuleIds.digests"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-digest-rejects-unknown-field",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/digests/items",
+            "body": {
+              "title": "Unknown field digest",
+              "status": "draft",
+              "category": "news",
+              "unsupported": true
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "DIGEST_FIELD_UNKNOWN"
+              }
+            ]
+          }
+        },
+        {
+          "id": "create-digest-valid",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/digests/items",
+            "body": {
+              "title": "M45 API Runner Digest Proof",
+              "labels": [
+                "featured",
+                "engineering"
+              ],
+              "publishedOn": null,
+              "recordId": "rec-001",
+              "summary": "Resolver catalog multi-token proof for digests",
+              "sourceUrl": "https://digests.example.test/m45-api-proof"
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.status",
+                "value": "draft"
+              },
+              {
+                "path": "body.item.category",
+                "value": "news"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-001"
+              },
+              {
+                "path": "body.item.slug",
+                "value": "m45-api-runner-digest-proof"
+              },
+              {
+                "path": "body.item.headlineCode",
+                "value": "M45 API RUNNER DIGEST PROOF"
+              },
+              {
+                "path": "body.item.headlineEcho",
+                "value": "M45 API Runner Digest Proof"
+              },
+              {
+                "path": "body.item.headlineLower",
+                "value": "m45 api runner digest proof"
+              },
+              {
+                "path": "body.item.headlineTitle",
+                "value": "M45 Api Runner Digest Proof"
+              }
+            ]
+          },
+          "capture": {
+            "digestId": "body.item.id"
+          }
+        },
+        {
+          "id": "update-digest-rejects-invalid-source-url",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/digests/items/{{digestId}}",
+            "body": {
+              "sourceUrl": "mailto:digest@example.test"
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "DIGEST_SOURCE_URL_INVALID_URL"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-digest-rejects-missing-publish-date",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/digests/items/{{digestId}}",
+            "body": {
+              "status": "published",
+              "publishedOn": null
+            }
+          },
+          "expect": {
+            "status": 400,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "DIGEST_PUBLISHED_ON_REQUIRED_FOR_PUBLISHED"
+              }
+            ]
+          }
+        },
+        {
+          "id": "update-digest-valid",
+          "request": {
+            "method": "PUT",
+            "path": "/api/reference/collections/digests/items/{{digestId}}",
+            "body": {
+              "title": "M45 API Runner Digest Proof Updated",
+              "status": "published",
+              "category": "ops",
+              "labels": [
+                "release"
+              ],
+              "publishedOn": "2026-02-14",
+              "recordId": "rec-002",
+              "summary": "Updated resolver catalog multi-token proof for digests",
+              "sourceUrl": "https://digests.example.test/m45-api-proof-updated"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.item.id",
+                "fromVar": "digestId"
+              },
+              {
+                "path": "body.item.status",
+                "value": "published"
+              },
+              {
+                "path": "body.item.recordId",
+                "value": "rec-002"
+              },
+              {
+                "path": "body.item.slug",
+                "value": "m45-api-runner-digest-proof-updated"
+              },
+              {
+                "path": "body.item.headlineCode",
+                "value": "M45 API RUNNER DIGEST PROOF UPDATED"
+              },
+              {
+                "path": "body.item.headlineEcho",
+                "value": "M45 API Runner Digest Proof Updated"
+              },
+              {
+                "path": "body.item.headlineLower",
+                "value": "m45 api runner digest proof updated"
+              },
+              {
+                "path": "body.item.headlineTitle",
+                "value": "M45 Api Runner Digest Proof Updated"
+              }
+            ]
+          }
+        },
+        {
+          "id": "list-digests-filtered",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/digests/items",
+            "query": {
+              "status": "published",
+              "category": "ops",
+              "recordId": "rec-002",
+              "search": "m45 api runner digest proof"
+            }
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.meta.total",
+                "value": 1
+              },
+              {
+                "path": "body.items[0].id",
+                "fromVar": "digestId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-digest",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/digests/items/{{digestId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "digestId"
+              }
+            ]
+          }
+        },
+        {
+          "id": "read-deleted-digest",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/collections/digests/items/{{digestId}}"
+          },
+          "expect": {
+            "status": 404,
+            "equals": [
+              {
+                "path": "body.error.code",
+                "value": "ITEM_NOT_FOUND"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "preserved-records-mission-lane",
+      "description": "Critical lane remains executable: records mutation path and mission submission contract.",
+      "steps": [
+        {
+          "id": "create-record",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/collections/records/items",
+            "body": {
+              "title": "M26 Preserved Lane {{runToken}}",
+              "status": "draft",
+              "score": 55,
+              "featured": false,
+              "publishedOn": null,
+              "noteIds": []
+            }
+          },
+          "expect": {
+            "status": 201,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.deploy.deployRequired",
+                "value": true
+              }
+            ]
+          },
+          "capture": {
+            "preservedRecordId": "body.item.id"
+          }
+        },
+        {
+          "id": "submit-mission-job",
+          "request": {
+            "method": "POST",
+            "path": "/api/reference/missions/remote-deploy-mission/jobs",
+            "body": {
+              "remoteId": null,
+              "shouldFail": false
+            }
+          },
+          "expect": {
+            "status": 202,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.job.type",
+                "value": "mission:remote-deploy-mission"
+              },
+              {
+                "path": "body.job.payload.remoteId",
+                "value": null
+              },
+              {
+                "path": "body.job.payload.shouldFail",
+                "value": false
+              }
+            ]
+          },
+          "capture": {
+            "missionJobId": "body.job.id"
+          }
+        },
+        {
+          "id": "read-mission-job",
+          "request": {
+            "method": "GET",
+            "path": "/api/reference/missions/jobs/{{missionJobId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.job.id",
+                "fromVar": "missionJobId"
+              },
+              {
+                "path": "body.job.type",
+                "value": "mission:remote-deploy-mission"
+              }
+            ]
+          }
+        },
+        {
+          "id": "delete-record",
+          "request": {
+            "method": "DELETE",
+            "path": "/api/reference/collections/records/items/{{preservedRecordId}}"
+          },
+          "expect": {
+            "status": 200,
+            "equals": [
+              {
+                "path": "body.ok",
+                "value": true
+              },
+              {
+                "path": "body.removed.id",
+                "fromVar": "preservedRecordId"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+

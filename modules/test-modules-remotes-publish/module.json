@@ -1,0 +1,942 @@
+{
+  "contractVersion": 1,
+  "id": "test-modules-remotes-publish",
+  "version": "0.1.0",
+  "name": "Test Modules Remotes Publish Module",
+  "capabilities": [
+    "crud.collection",
+    "deploy.remote",
+    "mission",
+    "schema",
+    "service",
+    "settings",
+    "ui.route"
+  ],
+  "lifecycle": {
+    "install": "test-modules-remotes-publish.install",
+    "uninstall": "test-modules-remotes-publish.uninstall"
+  },
+  "runtime": {
+    "collectionHandlers": "./server/collection-handlers.mjs",
+    "services": "./server/runtime-services.mjs",
+    "persistence": "./server/persistence-plugins.mjs",
+    "fieldTypePlugins": "./server/field-type-plugins.mjs",
+    "missions": "./server/missions.mjs",
+    "referenceOptionsProviders": "./server/reference-options-providers.mjs"
+  },
+  "settings": {
+    "contractVersion": 1,
+    "fields": [
+      {
+        "id": "apiToken",
+        "label": "API Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Sensitive token used for authenticated remote deploy requests."
+      },
+      {
+        "id": "authorDeletePolicy",
+        "label": "Author Delete Policy",
+        "type": "enum",
+        "required": true,
+        "defaultValue": "restrict",
+        "options": [
+          {
+            "value": "restrict",
+            "label": "Restrict"
+          },
+          {
+            "value": "nullify",
+            "label": "Nullify"
+          }
+        ],
+        "description": "Controls how author references are handled when deleting authors."
+      },
+      {
+        "id": "controlPlaneUrl",
+        "label": "Control Plane URL",
+        "type": "url",
+        "required": false,
+        "defaultValue": "https://control.example.invalid/deploy",
+        "description": "Optional control plane endpoint used for remote deployment orchestration."
+      },
+      {
+        "id": "defaultCategory",
+        "label": "Default Category",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "news",
+            "label": "News"
+          },
+          {
+            "value": "guide",
+            "label": "Guide"
+          },
+          {
+            "value": "ops",
+            "label": "Ops"
+          }
+        ],
+        "defaultValue": "news",
+        "description": "Applied when editors create new brief profiles."
+      },
+      {
+        "id": "deployMode",
+        "label": "Deploy Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "safe",
+            "label": "Safe"
+          },
+          {
+            "value": "fast",
+            "label": "Fast"
+          }
+        ],
+        "defaultValue": "safe",
+        "description": "Controls the default deploy behavior profile."
+      },
+      {
+        "id": "deployTimeoutMs",
+        "label": "Deploy Timeout (ms)",
+        "type": "number",
+        "required": true,
+        "min": 1000,
+        "max": 600000,
+        "defaultValue": 120000,
+        "description": "Maximum runtime for remote deployment operations."
+      },
+      {
+        "id": "editorialMode",
+        "label": "Editorial Mode",
+        "type": "enum",
+        "required": true,
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "strict",
+            "label": "Strict"
+          }
+        ],
+        "defaultValue": "standard",
+        "description": "Controls brief validation strictness for editorial workflows."
+      },
+      {
+        "id": "lastAuditOn",
+        "label": "Last Audit On",
+        "type": "date",
+        "required": false,
+        "defaultValue": "2026-02-01",
+        "description": "Optional last successful remote configuration audit date."
+      },
+      {
+        "id": "requireReview",
+        "label": "Require Review",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Require review before publishing brief profiles."
+      },
+      {
+        "id": "verifyTls",
+        "label": "Verify TLS",
+        "type": "boolean",
+        "required": true,
+        "defaultValue": true,
+        "description": "Enforce TLS certificate verification for remote endpoints."
+      },
+      {
+        "id": "webhookToken",
+        "label": "Webhook Token",
+        "type": "text",
+        "required": false,
+        "defaultValue": null,
+        "sensitive": true,
+        "description": "Token used by external profile sync webhooks."
+      }
+    ]
+  },
+  "ui": {
+    "navigation": {
+      "label": "Test Modules Remotes Publish",
+      "icon": "cloud_upload",
+      "order": 450
+    },
+    "routeView": {
+      "kind": "collections",
+      "viewId": "test-modules-remotes-publish",
+      "capabilities": {
+        "usesCollectionsDomain": true
+      },
+      "bannerMessage": "Module-owned view entrypoint: Test Modules Remotes Publish"
+    }
+  },
+  "collections": [
+    {
+      "id": "briefs",
+      "label": "Briefs",
+      "primaryField": "title",
+      "description": "Briefs managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "defaultValue": "draft",
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "defaultValue": "news",
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "summary",
+          "label": "Summary",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 240
+        },
+        {
+          "id": "sourceUrl",
+          "label": "Source URL",
+          "type": "url",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "id": "headlineCode",
+          "label": "Headline Code",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "uppercase",
+          "transform": "uppercase"
+        },
+        {
+          "id": "headlineEcho",
+          "label": "Headline Echo",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "identity",
+          "transform": "identity"
+        },
+        {
+          "id": "headlineTitle",
+          "label": "Headline Title",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "titlecase",
+          "transform": "titlecase"
+        }
+      ],
+      "behavior": {
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "digests",
+      "label": "Digests",
+      "primaryField": "title",
+      "description": "Digests managed through module-pluggable CRUD runtime.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 120
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "defaultValue": "draft",
+          "options": [
+            "draft",
+            "review",
+            "published"
+          ]
+        },
+        {
+          "id": "category",
+          "label": "Category",
+          "type": "enum",
+          "required": true,
+          "defaultValue": "news",
+          "options": [
+            "news",
+            "guide",
+            "ops"
+          ]
+        },
+        {
+          "id": "labels",
+          "label": "Labels",
+          "type": "enum-multi",
+          "required": false,
+          "options": [
+            "featured",
+            "engineering",
+            "release"
+          ]
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "recordId",
+          "label": "Related Record",
+          "type": "reference",
+          "required": false,
+          "collectionId": "records"
+        },
+        {
+          "id": "summary",
+          "label": "Summary",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 240
+        },
+        {
+          "id": "sourceUrl",
+          "label": "Source URL",
+          "type": "url",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        {
+          "id": "slug",
+          "label": "Slug",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify"
+        },
+        {
+          "id": "headlineCode",
+          "label": "Headline Code",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "uppercase",
+          "transform": "uppercase"
+        },
+        {
+          "id": "headlineEcho",
+          "label": "Headline Echo",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "identity",
+          "transform": "identity"
+        },
+        {
+          "id": "headlineLower",
+          "label": "Headline Lower",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "lowercase",
+          "transform": "lowercase"
+        },
+        {
+          "id": "headlineTitle",
+          "label": "Headline Title",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "titlecase",
+          "transform": "titlecase"
+        }
+      ],
+      "behavior": {
+        "enforceTitleUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "wpx-posts",
+      "label": "WPX Posts",
+      "entitySingular": "wpx-post",
+      "primaryField": "title",
+      "description": "WordPress-style posts with status lifecycle, term references, and quick operations.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 180
+        },
+        {
+          "id": "status",
+          "label": "Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "draft",
+            "published",
+            "scheduled"
+          ],
+          "defaultValue": "draft"
+        },
+        {
+          "id": "authorId",
+          "label": "Author",
+          "type": "reference",
+          "required": false,
+          "collectionId": "authors",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "onDeleteSetting": "authorDeletePolicy"
+        },
+        {
+          "id": "categoryTermIds",
+          "label": "Categories",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "wpx-terms",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true,
+            "optionsFilter": {
+              "fieldId": "taxonomyKind",
+              "value": "category"
+            }
+          }
+        },
+        {
+          "id": "tagTermIds",
+          "label": "Tags",
+          "type": "reference-multi",
+          "required": false,
+          "collectionId": "wpx-terms",
+          "labelField": "title",
+          "onDelete": "restrict",
+          "referenceUi": {
+            "inlineCreate": true,
+            "optionsFilter": {
+              "fieldId": "taxonomyKind",
+              "value": "tag"
+            }
+          }
+        },
+        {
+          "id": "excerpt",
+          "label": "Excerpt",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 280
+        },
+        {
+          "id": "publishedOn",
+          "label": "Published On",
+          "type": "date",
+          "required": false,
+          "defaultValue": null
+        },
+        {
+          "id": "permalink",
+          "label": "Permalink",
+          "type": "computed",
+          "required": false,
+          "source": "title",
+          "resolver": "slugify",
+          "transform": "slugify"
+        },
+        {
+          "id": "editorialMeta",
+          "label": "Editorial Meta",
+          "type": "structured-object",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "readingMode",
+                  "label": "Reading Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "latest",
+                    "static-front"
+                  ]
+                },
+                {
+                  "id": "discussionMode",
+                  "label": "Discussion Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "open",
+                    "moderated",
+                    "closed"
+                  ]
+                },
+                {
+                  "id": "notes",
+                  "label": "Notes",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 160
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "distributionTargets",
+          "label": "Distribution Targets",
+          "type": "structured-object-array",
+          "required": false,
+          "constraints": {
+            "itemLabel": "target",
+            "minItems": 0,
+            "maxItems": 20,
+            "itemSchema": {
+              "properties": [
+                {
+                  "id": "channel",
+                  "label": "Channel",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "web",
+                    "email",
+                    "api"
+                  ]
+                },
+                {
+                  "id": "priority",
+                  "label": "Priority",
+                  "type": "number",
+                  "required": false,
+                  "min": 1,
+                  "max": 10
+                },
+                {
+                  "id": "labels",
+                  "label": "Labels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 8
+                }
+              ]
+            }
+          },
+          "defaultValue": []
+        },
+        {
+          "id": "moderationProfile",
+          "label": "Moderation Profile",
+          "type": "wpx-moderation-profile",
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "mode",
+                  "label": "Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "open",
+                    "moderated",
+                    "strict"
+                  ]
+                },
+                {
+                  "id": "sensitivity",
+                  "label": "Sensitivity",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 100
+                },
+                {
+                  "id": "reviewerGroup",
+                  "label": "Reviewer Group",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 80
+                },
+                {
+                  "id": "channels",
+                  "label": "Channels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 6
+                }
+              ]
+            }
+          },
+          "required": false,
+          "defaultValue": null
+        }
+      ],
+      "behavior": {
+        "enforcePrimaryFieldUnique": true,
+        "requirePublishedOnWhenPublished": true
+      }
+    },
+    {
+      "id": "wpx-publish-jobs",
+      "label": "WPX Publish Jobs",
+      "entitySingular": "wpx-publish-job",
+      "primaryField": "title",
+      "description": "Async publish/schedule pipeline evidence with deterministic terminal states.",
+      "capabilities": {
+        "list": true,
+        "read": true,
+        "create": true,
+        "update": true,
+        "delete": true
+      },
+      "fields": [
+        {
+          "id": "title",
+          "label": "Title",
+          "type": "text",
+          "required": true,
+          "minLength": 3,
+          "maxLength": 180
+        },
+        {
+          "id": "postId",
+          "label": "Post",
+          "type": "reference",
+          "required": false,
+          "collectionId": "wpx-posts",
+          "labelField": "title",
+          "onDelete": "nullify"
+        },
+        {
+          "id": "requestedStatus",
+          "label": "Requested Status",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "published",
+            "scheduled"
+          ],
+          "defaultValue": "published"
+        },
+        {
+          "id": "terminalState",
+          "label": "Terminal State",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "queued",
+            "running",
+            "completed",
+            "blocked",
+            "failed"
+          ],
+          "defaultValue": "queued"
+        },
+        {
+          "id": "missionJobId",
+          "label": "Mission Job Id",
+          "type": "text",
+          "required": false,
+          "minLength": 0,
+          "maxLength": 120
+        },
+        {
+          "id": "policyMode",
+          "label": "Policy Mode",
+          "type": "enum",
+          "required": true,
+          "options": [
+            "pending",
+            "direct",
+            "moderated"
+          ],
+          "defaultValue": "pending"
+        },
+        {
+          "id": "moderationProfile",
+          "label": "Moderation Profile",
+          "type": "wpx-moderation-profile",
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "mode",
+                  "label": "Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "open",
+                    "moderated",
+                    "strict"
+                  ]
+                },
+                {
+                  "id": "sensitivity",
+                  "label": "Sensitivity",
+                  "type": "number",
+                  "required": false,
+                  "min": 0,
+                  "max": 100
+                },
+                {
+                  "id": "reviewerGroup",
+                  "label": "Reviewer Group",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 80
+                },
+                {
+                  "id": "channels",
+                  "label": "Channels",
+                  "type": "string-list",
+                  "required": false,
+                  "minItems": 0,
+                  "maxItems": 6
+                }
+              ]
+            }
+          },
+          "required": false,
+          "defaultValue": null
+        },
+        {
+          "id": "details",
+          "label": "Details",
+          "type": "structured-object",
+          "required": false,
+          "constraints": {
+            "objectSchema": {
+              "properties": [
+                {
+                  "id": "stage",
+                  "label": "Stage",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "queued",
+                    "running",
+                    "completed",
+                    "blocked",
+                    "failed"
+                  ]
+                },
+                {
+                  "id": "action",
+                  "label": "Action",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 40
+                },
+                {
+                  "id": "reason",
+                  "label": "Reason",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 180
+                }
+              ]
+            }
+          },
+          "defaultValue": null
+        },
+        {
+          "id": "events",
+          "label": "Events",
+          "type": "structured-object-array",
+          "required": false,
+          "constraints": {
+            "itemLabel": "event",
+            "minItems": 0,
+            "maxItems": 20,
+            "itemSchema": {
+              "properties": [
+                {
+                  "id": "label",
+                  "label": "Label",
+                  "type": "text",
+                  "required": true,
+                  "minLength": 2,
+                  "maxLength": 90
+                },
+                {
+                  "id": "mode",
+                  "label": "Mode",
+                  "type": "enum",
+                  "required": true,
+                  "options": [
+                    "system",
+                    "manual"
+                  ]
+                },
+                {
+                  "id": "notes",
+                  "label": "Notes",
+                  "type": "text",
+                  "required": false,
+                  "minLength": 0,
+                  "maxLength": 180
+                },
+                {
+                  "id": "checks",
+                  "label": "Checks",
+                  "type": "group",
+                  "required": false,
+                  "properties": [
+                    {
+                      "id": "mustPass",
+                      "label": "Must Pass",
+                      "type": "boolean",
+                      "required": false
+                    },
+                    {
+                      "id": "labels",
+                      "label": "Labels",
+                      "type": "string-list",
+                      "required": false,
+                      "minItems": 0,
+                      "maxItems": 8
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "defaultValue": []
+        },
+        {
+          "id": "createdOn",
+          "label": "Created On",
+          "type": "date",
+          "required": false,
+          "defaultValue": null
+        },
+        {
+          "id": "finishedOn",
+          "label": "Finished On",
+          "type": "date",
+          "required": false,
+          "defaultValue": null
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "owner": "reference-domain-runtime",
+    "maturity": "proof",
+    "recomposition": {
+      "stage": "stage-3",
+      "wave": "S3.1",
+      "pass": "capability-recomposition-pass1",
+      "timestampUtc": "2026-03-03T16:26:04.637Z",
+      "legacyModuleIds": [
+        "briefs",
+        "digests",
+        "remotes",
+        "wpx-posts",
+        "wpx-publish-jobs"
+      ]
+    }
+  }
+}
+
