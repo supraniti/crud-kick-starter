@@ -1,6 +1,6 @@
 {
   "contractVersion": 1,
-  "packId": "m26-step-b-baseline",
+  "packId": "editorial-capability-baseline",
   "description": "Step-B live API evidence for articles + authors + publishers + editors + reviews + briefs + digests module behavior plus preserved critical lane.",
   "scenarios": [
     {
@@ -109,7 +109,7 @@
             "method": "POST",
             "path": "/api/reference/collections/articles/items",
             "body": {
-              "title": "M26 API Runner Article {{runToken}}",
+              "title": "Editorial API Runner Article {{runToken}}",
               "status": "review",
               "category": "guide",
               "labels": [
@@ -198,7 +198,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/articles/items/{{articleId}}",
             "body": {
-              "title": "M26 API Runner Article Updated {{runToken}}",
+              "title": "Editorial API Runner Article Updated {{runToken}}",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -378,7 +378,7 @@
             "method": "POST",
             "path": "/api/reference/collections/authors/items",
             "body": {
-              "title": "M28 API Runner Author {{runToken}}",
+              "title": "Editorial API Runner Author {{runToken}}",
               "status": "review",
               "category": "guide",
               "labels": [
@@ -467,7 +467,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/authors/items/{{authorId}}",
             "body": {
-              "title": "M28 API Runner Author Updated {{runToken}}",
+              "title": "Editorial API Runner Author Updated {{runToken}}",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -647,7 +647,7 @@
             "method": "POST",
             "path": "/api/reference/collections/publishers/items",
             "body": {
-              "title": "M29 API Runner Publisher {{runToken}}",
+              "title": "Editorial API Runner Publisher {{runToken}}",
               "status": "review",
               "category": "guide",
               "labels": [
@@ -748,7 +748,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/publishers/items/{{publisherId}}",
             "body": {
-              "title": "M29 API Runner Publisher Updated {{runToken}}",
+              "title": "Editorial API Runner Publisher Updated {{runToken}}",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -938,7 +938,7 @@
             "method": "POST",
             "path": "/api/reference/collections/editors/items",
             "body": {
-              "title": "M30 API Runner Editor {{runToken}}",
+              "title": "Editorial API Runner Editor {{runToken}}",
               "status": "review",
               "category": "guide",
               "labels": [
@@ -1027,7 +1027,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/editors/items/{{editorId}}",
             "body": {
-              "title": "M30 API Runner Editor Updated {{runToken}}",
+              "title": "Editorial API Runner Editor Updated {{runToken}}",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -1153,7 +1153,7 @@
             "method": "POST",
             "path": "/api/reference/collections/reviews/items",
             "body": {
-              "title": "M43 API Runner Review {{runToken}}",
+              "title": "Editorial API Runner Review {{runToken}}",
               "status": "published",
               "category": "news",
               "labels": [
@@ -1189,7 +1189,7 @@
             "method": "POST",
             "path": "/api/reference/collections/reviews/items",
             "body": {
-              "title": "M43 API Runner Review {{runToken}}",
+              "title": "Editorial API Runner Review {{runToken}}",
               "status": "published",
               "category": "ops",
               "labels": [],
@@ -1331,7 +1331,7 @@
             "method": "POST",
             "path": "/api/reference/collections/briefs/items",
             "body": {
-              "title": "M44 API Runner Brief Proof",
+              "title": "Brief Scenario Unique Alpha",
               "labels": [
                 "featured",
                 "engineering"
@@ -1339,7 +1339,7 @@
               "publishedOn": null,
               "recordId": "rec-001",
               "summary": "Resolver proof summary for briefs",
-              "sourceUrl": "https://briefs.example.test/m44-api-proof"
+              "sourceUrl": "https://briefs.example.test/editorial-brief-proof"
             }
           },
           "expect": {
@@ -1363,15 +1363,15 @@
               },
               {
                 "path": "body.item.headlineCode",
-                "value": "M44 API RUNNER BRIEF PROOF"
+                "value": "BRIEF SCENARIO UNIQUE ALPHA"
               },
               {
                 "path": "body.item.headlineEcho",
-                "value": "M44 API Runner Brief Proof"
+                "value": "Brief Scenario Unique Alpha"
               },
               {
                 "path": "body.item.headlineTitle",
-                "value": "M44 Api Runner Brief Proof"
+                "value": "Brief Scenario Unique Alpha"
               }
             ]
           },
@@ -1424,7 +1424,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/briefs/items/{{briefId}}",
             "body": {
-              "title": "M44 API Runner Brief Proof Updated",
+              "title": "Brief Scenario Unique Alpha Updated",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -1433,7 +1433,7 @@
               "publishedOn": "2026-02-14",
               "recordId": "rec-002",
               "summary": "Updated resolver proof summary for briefs",
-              "sourceUrl": "https://briefs.example.test/m44-api-proof-updated"
+              "sourceUrl": "https://briefs.example.test/editorial-brief-proof-updated"
             }
           },
           "expect": {
@@ -1457,15 +1457,15 @@
               },
               {
                 "path": "body.item.headlineCode",
-                "value": "M44 API RUNNER BRIEF PROOF UPDATED"
+                "value": "BRIEF SCENARIO UNIQUE ALPHA UPDATED"
               },
               {
                 "path": "body.item.headlineEcho",
-                "value": "M44 API Runner Brief Proof Updated"
+                "value": "Brief Scenario Unique Alpha Updated"
               },
               {
                 "path": "body.item.headlineTitle",
-                "value": "M44 Api Runner Brief Proof Updated"
+                "value": "Brief Scenario Unique Alpha Updated"
               }
             ]
           }
@@ -1479,7 +1479,7 @@
               "status": "published",
               "category": "ops",
               "recordId": "rec-002",
-              "search": "m44 api runner brief proof"
+              "search": "unique alpha"
             }
           },
           "expect": {
@@ -1586,7 +1586,7 @@
             "method": "POST",
             "path": "/api/reference/collections/digests/items",
             "body": {
-              "title": "M45 API Runner Digest Proof",
+              "title": "Digest Scenario Unique Beta",
               "labels": [
                 "featured",
                 "engineering"
@@ -1594,7 +1594,7 @@
               "publishedOn": null,
               "recordId": "rec-001",
               "summary": "Resolver catalog multi-token proof for digests",
-              "sourceUrl": "https://digests.example.test/m45-api-proof"
+              "sourceUrl": "https://digests.example.test/editorial-digest-proof"
             }
           },
           "expect": {
@@ -1618,23 +1618,23 @@
               },
               {
                 "path": "body.item.slug",
-                "value": "m45-api-runner-digest-proof"
+                "value": "digest-scenario-unique-beta"
               },
               {
                 "path": "body.item.headlineCode",
-                "value": "M45 API RUNNER DIGEST PROOF"
+                "value": "DIGEST SCENARIO UNIQUE BETA"
               },
               {
                 "path": "body.item.headlineEcho",
-                "value": "M45 API Runner Digest Proof"
+                "value": "Digest Scenario Unique Beta"
               },
               {
                 "path": "body.item.headlineLower",
-                "value": "m45 api runner digest proof"
+                "value": "digest scenario unique beta"
               },
               {
                 "path": "body.item.headlineTitle",
-                "value": "M45 Api Runner Digest Proof"
+                "value": "Digest Scenario Unique Beta"
               }
             ]
           },
@@ -1687,7 +1687,7 @@
             "method": "PUT",
             "path": "/api/reference/collections/digests/items/{{digestId}}",
             "body": {
-              "title": "M45 API Runner Digest Proof Updated",
+              "title": "Digest Scenario Unique Beta Updated",
               "status": "published",
               "category": "ops",
               "labels": [
@@ -1696,7 +1696,7 @@
               "publishedOn": "2026-02-14",
               "recordId": "rec-002",
               "summary": "Updated resolver catalog multi-token proof for digests",
-              "sourceUrl": "https://digests.example.test/m45-api-proof-updated"
+              "sourceUrl": "https://digests.example.test/editorial-digest-proof-updated"
             }
           },
           "expect": {
@@ -1720,23 +1720,23 @@
               },
               {
                 "path": "body.item.slug",
-                "value": "m45-api-runner-digest-proof-updated"
+                "value": "digest-scenario-unique-beta-updated"
               },
               {
                 "path": "body.item.headlineCode",
-                "value": "M45 API RUNNER DIGEST PROOF UPDATED"
+                "value": "DIGEST SCENARIO UNIQUE BETA UPDATED"
               },
               {
                 "path": "body.item.headlineEcho",
-                "value": "M45 API Runner Digest Proof Updated"
+                "value": "Digest Scenario Unique Beta Updated"
               },
               {
                 "path": "body.item.headlineLower",
-                "value": "m45 api runner digest proof updated"
+                "value": "digest scenario unique beta updated"
               },
               {
                 "path": "body.item.headlineTitle",
-                "value": "M45 Api Runner Digest Proof Updated"
+                "value": "Digest Scenario Unique Beta Updated"
               }
             ]
           }
@@ -1750,7 +1750,7 @@
               "status": "published",
               "category": "ops",
               "recordId": "rec-002",
-              "search": "m45 api runner digest proof"
+              "search": "unique beta"
             }
           },
           "expect": {
@@ -1815,7 +1815,7 @@
             "method": "POST",
             "path": "/api/reference/collections/records/items",
             "body": {
-              "title": "M26 Preserved Lane {{runToken}}",
+              "title": "Editorial Preserved Lane {{runToken}}",
               "status": "draft",
               "score": 55,
               "featured": false,
@@ -1923,4 +1923,5 @@
     }
   ]
 }
+
 

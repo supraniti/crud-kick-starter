@@ -1,6 +1,6 @@
 # Browser Smoke E2E Lane
 
-Real browser-backed smoke lane implemented for Phase 4 closeout.
+Real browser-backed smoke lane for end-to-end release validation.
 
 ## Scope
 - lane: `browser-smoke-e2e`

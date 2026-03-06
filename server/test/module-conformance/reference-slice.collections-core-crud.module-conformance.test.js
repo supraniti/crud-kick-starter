@@ -79,7 +79,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/records/items")
       .withJson({
-        title: "M7 Baseline Item",
+        title: "Baseline Record Item",
         status: "draft",
         score: 91,
         featured: true,
@@ -92,14 +92,14 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M7 Baseline Item",
+        title: "Baseline Record Item",
         status: "draft",
         score: 91,
         featured: true,
         publishedOn: "2026-02-11",
         noteIds: ["note-001"],
         noteTitles: ["Ops Followup"],
-        slug: "m7-baseline-item"
+        slug: "baseline-record-item"
       })
     );
 
@@ -176,7 +176,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/records/items/${createdId}`)
       .withJson({
-        title: "M7 Baseline Item Updated",
+        title: "Baseline Record Item Updated",
         status: "review",
         score: 88,
         featured: false,
@@ -189,14 +189,14 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M7 Baseline Item Updated",
+        title: "Baseline Record Item Updated",
         status: "review",
         score: 88,
         featured: false,
         publishedOn: null,
         noteIds: ["note-002"],
         noteTitles: ["Frontend Polish"],
-        slug: "m7-baseline-item-updated"
+        slug: "baseline-record-item-updated"
       })
     );
 
@@ -315,7 +315,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/notes/items")
       .withJson({
-        title: "M8 Ops Note",
+        title: "Ops Note Entry",
         category: "ops",
         labels: ["ops", "release"],
         priority: 4,
@@ -329,7 +329,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M8 Ops Note",
+        title: "Ops Note Entry",
         category: "ops",
         labels: ["ops", "release"],
         priority: 4,
@@ -338,14 +338,14 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
         recordId: "rec-001",
         recordTitle: expect.any(String),
         recordIdTitle: expect.any(String),
-        slug: "m8-ops-note"
+        slug: "ops-note-entry"
       })
     );
 
     const createdId = createResponse.body.item.id;
 
     const listResponse = await spec()
-      .get("/api/reference/collections/notes/items?category=ops&labels=ops,release&recordId=rec-001&search=m8")
+      .get("/api/reference/collections/notes/items?category=ops&labels=ops,release&recordId=rec-001&search=ops")
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
     expect(listResponse.body.items.map((item) => item.id)).toContain(createdId);
@@ -354,12 +354,12 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
         category: "ops",
         labels: ["ops", "release"],
         recordId: "rec-001",
-        search: "m8"
+        search: "ops"
       })
     );
 
     const listResponseKebabReference = await spec()
-      .get("/api/reference/collections/notes/items?category=ops&labels=ops,release&record-id=rec-001&search=m8")
+      .get("/api/reference/collections/notes/items?category=ops&labels=ops,release&record-id=rec-001&search=ops")
       .expectStatus(200);
     expect(listResponseKebabReference.body.ok).toBe(true);
     expect(listResponseKebabReference.body.items.map((item) => item.id)).toContain(createdId);
@@ -395,7 +395,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/notes/items/${createdId}`)
       .withJson({
-        title: "M8 Ops Note Updated",
+        title: "Ops Note Entry Updated",
         category: "tech",
         labels: ["ui"],
         priority: 3,
@@ -409,7 +409,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M8 Ops Note Updated",
+        title: "Ops Note Entry Updated",
         category: "tech",
         labels: ["ui"],
         priority: 3,
@@ -418,7 +418,7 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
         recordId: "rec-002",
         recordTitle: expect.any(String),
         recordIdTitle: expect.any(String),
-        slug: "m8-ops-note-updated"
+        slug: "ops-note-entry-updated"
       })
     );
 
@@ -444,3 +444,4 @@ function registerReferenceSliceCollectionsCoreCrudFlowsSuite() {
 export { registerReferenceSliceCollectionsCoreCrudFlowsSuite };
 
 registerReferenceSliceSuiteWithServer(registerReferenceSliceCollectionsCoreCrudFlowsSuite);
+

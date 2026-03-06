@@ -1,7 +1,7 @@
 {
   "contractVersion": 1,
-  "packId": "m22-step-a-baseline",
-  "description": "Baseline drift-detection scenarios for post-M21 realignment invariants.",
+  "packId": "deployment-mission-policy-baseline",
+  "description": "Baseline drift-detection scenarios for deployment and mission invariants.",
   "scenarios": [
     {
       "id": "collection-mutation-deploy-parity",
@@ -13,7 +13,7 @@
             "method": "POST",
             "path": "/api/reference/collections/records/items",
             "body": {
-              "title": "M22 API Runner {{runToken}}",
+              "title": "Deployment Policy API Runner {{runToken}}",
               "status": "draft",
               "score": 50,
               "featured": false,
@@ -304,3 +304,4 @@
     }
   ]
 }
+

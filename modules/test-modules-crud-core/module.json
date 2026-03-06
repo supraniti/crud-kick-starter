@@ -176,7 +176,7 @@
       "id": "notes",
       "label": "Notes",
       "primaryField": "title",
-      "description": "Expanded schema/type collection for M8 field-matrix coverage.",
+      "description": "Expanded schema/type collection for field-matrix coverage.",
       "capabilities": {
         "list": true,
         "read": true,
@@ -257,7 +257,7 @@
       "id": "records",
       "label": "Records",
       "primaryField": "title",
-      "description": "Generic CRUD baseline collection for M7 validation.",
+      "description": "Generic CRUD baseline collection for baseline validation.",
       "capabilities": {
         "list": true,
         "read": true,
@@ -325,12 +325,10 @@
   "metadata": {
     "owner": "reference-domain-runtime",
     "maturity": "proof",
-    "recomposition": {
-      "stage": "stage-3",
-      "wave": "S3.1",
-      "pass": "capability-recomposition-pass1",
+    "lineage": {
+      "generator": "capability-recomposition",
       "timestampUtc": "2026-03-03T16:26:04.637Z",
-      "legacyModuleIds": [
+      "sourceModuleIds": [
         "articles",
         "products",
         "records"
@@ -338,4 +336,5 @@
     }
   }
 }
+
 

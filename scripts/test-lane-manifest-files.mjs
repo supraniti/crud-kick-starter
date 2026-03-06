@@ -29,7 +29,7 @@ function normalizeList(values) {
   return [...new Set(values.map((value) => String(value).trim()).filter(Boolean))].sort();
 }
 
-function loadPhase1Manifests() {
+function loadLaneManifests() {
   const serverManifest = readJson(SERVER_MANIFEST_PATH);
   const frontendManifest = readJson(FRONTEND_MANIFEST_PATH);
   return {
@@ -47,7 +47,7 @@ export function getCoreFileList(target) {
 }
 
 export function getLaneFileList(target, laneGroup) {
-  const { serverManifest, frontendManifest } = loadPhase1Manifests();
+  const { serverManifest, frontendManifest } = loadLaneManifests();
   const normalizedLaneGroup = String(laneGroup || "").trim();
 
   if (target === "server") {

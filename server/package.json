@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "infra:live-check": "node scripts/m2-live-check.js",
-    "api-runner:m22": "node scripts/m22-api-runner.mjs",
-    "api-runner:m26": "node scripts/m26-api-runner.mjs",
+    "infra:live-check": "node scripts/infra-live-check.js",
+    "api-runner:deployment-mission-policy": "node scripts/deployment-mission-policy-api-runner.mjs",
+    "api-runner:editorial-capability": "node scripts/editorial-capability-api-runner.mjs",
     "test": "vitest run --testTimeout=60000 --hookTimeout=60000 --exclude test/core/manifest-discovery.schema.collections.core.test.js --exclude test/core/manifest-discovery.schema.computed-behavior.core.test.js --exclude test/core/manifest-discovery.schema.route-view-runtime.core.test.js --exclude test/core/manifest-discovery.schema.route-view-settings.core.test.js --exclude test/core/scaffolder-profile.validation.core.test.js --exclude test/core/scaffolder-profile.validation.deterministic-output.core.test.js --exclude test/core/scaffolder-profile.validation.object-form.core.test.js --exclude test/core/scaffolder-profile.validation.rejections.core.test.js --exclude test/module-conformance/module-settings.module-conformance.test.js --exclude test/module-conformance/module-settings.persistence.module-conformance.test.js --exclude test/module-conformance/reference-slice.iter5.capability-pack.module-conformance.test.js"
   },
   "dependencies": {
@@ -21,3 +21,4 @@
     "vitest": "latest"
   }
 }
+

@@ -26,8 +26,8 @@
 4. Frontend build:
    - `pnpm --filter frontend build`
 5. API baseline runners:
-   - `pnpm api-runner:m22 -- --no-write-reports`
-   - `pnpm api-runner:m26 -- --no-write-reports`
+   - `pnpm api-runner:deployment-mission-policy -- --no-write-reports`
+   - `pnpm api-runner:editorial-capability -- --no-write-reports`
 6. Dev services:
    - `pnpm dev:server`
    - `pnpm dev:frontend`
@@ -36,3 +36,4 @@
 1. Record exact command and error under `handoff.md` next-actions/notes before pause.
 2. Classify as environment/tooling issue or product behavior issue.
 3. If command changed, update `docs/command-registry.md` in the same slice.
+

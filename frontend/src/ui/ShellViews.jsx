@@ -185,7 +185,7 @@ function LoginView({ onSignIn }) {
           <Stack spacing={2}>
             <Typography variant="h5">Crud Control</Typography>
             <Typography variant="body2" color="text.secondary">
-              Local authenticated shell baseline for the M4 reference slice.
+              Local authenticated shell baseline for the reference domain.
             </Typography>
             <Button variant="contained" onClick={onSignIn}>
               Sign in (local)
@@ -295,4 +295,5 @@ function ModuleQuickActions({ actions, onRunAction }) {
 }
 
 export { StatusChip, DeployPanel, LoginView, ModuleSidebar, ModuleQuickActions };
+
 

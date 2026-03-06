@@ -15,15 +15,16 @@ const dockerProbe = spawnSync(
 const dockerAvailable = dockerProbe.status === 0;
 const liveEnabled = liveRequested && dockerAvailable;
 const describeLive = liveEnabled ? describe : describe.skip;
+const REQUEST_TIMEOUT_MS = 15_000;
 
 let server;
 
 async function get(path) {
-  return spec().get(path).expectStatus(200);
+  return spec().get(path).withRequestTimeout(REQUEST_TIMEOUT_MS).expectStatus(200);
 }
 
 async function post(path) {
-  return spec().post(path).expectStatus(200);
+  return spec().post(path).withRequestTimeout(REQUEST_TIMEOUT_MS).expectStatus(200);
 }
 
 async function waitForMongoConnected(maxAttempts = 20, delayMs = 1000) {
@@ -66,7 +67,6 @@ describeLive("live docker/mongo integration", () => {
       const statusBefore = await get("/api/infra/containers/mongo/status");
       expect(statusBefore.body.ok).toBe(true);
       expect(statusBefore.body.operation).toBe("status");
-
       const started = await post("/api/infra/containers/mongo/start");
       expect(started.body.ok).toBe(true);
       expect(started.body.operation).toBe("start");
@@ -84,6 +84,11 @@ describeLive("live docker/mongo integration", () => {
       expect(stopped.body.ok).toBe(true);
       expect(stopped.body.operation).toBe("stop");
       expect(stopped.body.status.running).toBe(false);
+
+      const restored = await post("/api/infra/containers/mongo/start");
+      expect(restored.body.ok).toBe(true);
+      expect(restored.body.operation).toBe("start");
+      expect(restored.body.status.running).toBe(true);
     },
     300000
   );

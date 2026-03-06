@@ -129,9 +129,31 @@ function toRunFileArgs(args, selectedManifestFiles) {
 }
 
 function buildRunArgs(args, runFileArgs) {
-  return args.target === "server"
-    ? ["--filter", "server", "exec", "vitest", "run", ...runFileArgs]
-    : ["--filter", "frontend", "exec", "vitest", "run", ...runFileArgs];
+  if (args.target === "server") {
+    const serverRunArgs = [
+      "--filter",
+      "server",
+      "exec",
+      "vitest",
+      "run",
+      "--pool=threads",
+      "--testTimeout=60000",
+      "--hookTimeout=60000"
+    ];
+
+    // Runtime integration includes live infra mutation tests (start/stop/restart Mongo),
+    // so keep execution single-worker to avoid cross-test interference.
+    if (args.laneGroup === "runtime-integration") {
+      serverRunArgs.push("--maxWorkers=1");
+    }
+
+    return [
+      ...serverRunArgs,
+      ...runFileArgs
+    ];
+  }
+
+  return ["--filter", "frontend", "exec", "vitest", "run", ...runFileArgs];
 }
 
 function printJsonAndExit(payload, exitCode) {

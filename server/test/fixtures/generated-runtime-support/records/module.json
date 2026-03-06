@@ -31,7 +31,7 @@
       "id": "records",
       "label": "Records",
       "primaryField": "title",
-      "description": "Generic CRUD baseline collection for M7 validation.",
+      "description": "Generic CRUD baseline collection for baseline validation.",
       "capabilities": {
         "list": true,
         "read": true,
@@ -99,7 +99,7 @@
       "id": "notes",
       "label": "Notes",
       "primaryField": "title",
-      "description": "Expanded schema/type collection for M8 field-matrix coverage.",
+      "description": "Expanded schema/type collection for field-matrix coverage.",
       "capabilities": {
         "list": true,
         "read": true,
@@ -182,3 +182,4 @@
     "maturity": "baseline"
   }
 }
+

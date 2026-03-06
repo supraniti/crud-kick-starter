@@ -6,7 +6,7 @@
 ## Active Gate Profiles
 - `dev-fast`: repo/function lint, contract integrity, server core+conformance, frontend core+conformance.
 - `pr-standard`: `dev-fast` plus server runtime integration and frontend integration.
-- `release-full`: `pr-standard` plus e2e smoke, api runners (`m22`, `m26`), frontend build, and mission replay gate.
+- `release-full`: `pr-standard` plus e2e smoke, api runners (`deployment-mission-policy`, `editorial-capability`), frontend build, and mission replay gate.
 
 ## Active Artifact Bindings
 - Dynamic lane selection uses:
@@ -19,4 +19,5 @@
 
 ## Contract Integrity Binding
 - `scripts/protocol-integrity-check.mjs` must pass for `quality:gate` and `quality:gate:full`.
+
 

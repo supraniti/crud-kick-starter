@@ -140,7 +140,7 @@ describe("collections field registry contract", () => {
       editorDefinition.renderEditor({
         field,
         formState: {
-          title: "m56 api runner digest proof"
+          title: "digest resolver proof"
         },
         controlsDisabled: false,
         onChangeForm: () => {}
@@ -148,7 +148,7 @@ describe("collections field registry contract", () => {
     );
 
     const computedInput = screen.getByLabelText("Headline Title");
-    expect(computedInput).toHaveValue("M56 Api Runner Digest Proof");
+    expect(computedInput).toHaveValue("Digest Resolver Proof");
     expect(computedInput).toBeDisabled();
   });
 
@@ -163,13 +163,13 @@ describe("collections field registry contract", () => {
       field,
       item: {
         id: "dig-001",
-        sourceUrl: "https://digests.example.test/m56-proof"
+        sourceUrl: "https://digests.example.test/digest-resolver-proof"
       }
     });
 
     render(<>{rendered}</>);
-    const link = screen.getByRole("link", { name: "https://digests.example.test/m56-proof" });
-    expect(link).toHaveAttribute("href", "https://digests.example.test/m56-proof");
+    const link = screen.getByRole("link", { name: "https://digests.example.test/digest-resolver-proof" });
+    expect(link).toHaveAttribute("href", "https://digests.example.test/digest-resolver-proof");
   });
 
   test("date editor resolves through type plugin metadata with shrinked date input label", () => {
@@ -321,4 +321,5 @@ describe("collections field registry contract", () => {
     });
   });
 });
+
 

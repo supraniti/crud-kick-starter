@@ -27,7 +27,7 @@ export function registerReferenceSlicePersistencePolicyRestartSuite() {
   test(
     "module lifecycle state persists across restart and keeps collection availability aligned",
     async () => {
-    const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "crud-control-m11-runtime-"));
+    const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "crud-control-runtime-state-"));
     const runtimeStateFile = path.join(runtimeDir, "module-runtime-state.json");
     let firstServer = null;
     let secondServer = null;
@@ -107,7 +107,7 @@ export function registerReferenceSlicePersistencePolicyRestartSuite() {
   );
 
   test("startup reconciliation surfaces diagnostics for orphan and invalid persisted module states", async () => {
-    const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "crud-control-m11-runtime-"));
+    const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "crud-control-runtime-state-"));
     const runtimeStateFile = path.join(runtimeDir, "module-runtime-state.json");
     let ephemeralServer = null;
 
@@ -552,4 +552,5 @@ export function registerReferenceSlicePersistencePolicyRestartSuite() {
 
 
 registerReferenceSliceSuiteWithServer(registerReferenceSlicePersistencePolicyRestartSuite);
+
 

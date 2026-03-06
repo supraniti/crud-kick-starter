@@ -17,16 +17,16 @@ const DEFAULT_SCENARIO_PACK_PATH = path.resolve(
   CURRENT_DIR,
   "api-runner",
   "scenarios",
-  "m26-step-b-baseline.json"
+  "deployment-mission-policy-baseline.json"
 );
 const DEFAULT_REPORT_DIR = path.resolve(CURRENT_DIR, "..", "runtime", "api-runner");
 const DEFAULT_JSON_REPORT_PATH = path.resolve(
   DEFAULT_REPORT_DIR,
-  "m26-step-b-latest.json"
+  "deployment-mission-policy-latest.json"
 );
 const DEFAULT_MARKDOWN_REPORT_PATH = path.resolve(
   DEFAULT_REPORT_DIR,
-  "m26-step-b-latest.md"
+  "deployment-mission-policy-latest.md"
 );
 const DEFAULT_SERVER_HOST = "127.0.0.1";
 const DEFAULT_MONGO_URI = "mongodb://127.0.0.1:27017/admin";
@@ -184,7 +184,7 @@ async function writeReports({
   );
 }
 
-export async function runM26ApiRunner(options = {}) {
+export async function runDeploymentMissionPolicyApiRunner(options = {}) {
   const scenarioPath = options.scenarioPath ?? DEFAULT_SCENARIO_PACK_PATH;
   const scenarioText = await fs.readFile(scenarioPath, "utf8");
   const pack = JSON.parse(scenarioText);
@@ -250,7 +250,7 @@ export async function runM26ApiRunner(options = {}) {
 
 async function runCli() {
   const args = parseArgs(process.argv.slice(2));
-  const result = await runM26ApiRunner(args);
+  const result = await runDeploymentMissionPolicyApiRunner(args);
 
   const summary = {
     ok: result.ok,
@@ -282,8 +282,8 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     const payload = {
       ok: false,
       error: {
-        code: error?.code ?? "M26_API_RUNNER_FAILED",
-        message: error?.message ?? "M26 API runner failed"
+        code: error?.code ?? "DEPLOYMENT_MISSION_POLICY_API_RUNNER_FAILED",
+        message: error?.message ?? "Deployment mission policy API runner failed"
       },
       timestamp: new Date().toISOString()
     };
@@ -291,5 +291,6 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     process.exitCode = 1;
   });
 }
+
 
 

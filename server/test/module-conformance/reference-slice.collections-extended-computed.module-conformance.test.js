@@ -63,28 +63,28 @@ export function registerReferenceSliceCollectionsExtendedComputedSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/briefs/items")
       .withJson({
-        title: "M44 Brief Resolver Proof",
+        title: "Brief Resolver Beacon",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         summary: "Resolver proof summary",
-        sourceUrl: "https://briefs.example.test/m44-proof"
+        sourceUrl: "https://briefs.example.test/brief-proof"
       })
       .expectStatus(201);
     expect(createResponse.body.ok).toBe(true);
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
-        title: "M44 Brief Resolver Proof",
+        title: "Brief Resolver Beacon",
         status: "draft",
         category: "news",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         summary: "Resolver proof summary",
-        sourceUrl: "https://briefs.example.test/m44-proof",
-        headlineCode: "M44 BRIEF RESOLVER PROOF",
-        headlineEcho: "M44 Brief Resolver Proof",
-        headlineTitle: "M44 Brief Resolver Proof"
+        sourceUrl: "https://briefs.example.test/brief-proof",
+        headlineCode: "BRIEF RESOLVER BEACON",
+        headlineEcho: "Brief Resolver Beacon",
+        headlineTitle: "Brief Resolver Beacon"
       })
     );
     expect(createResponse.body.item).not.toHaveProperty("slug");
@@ -112,36 +112,36 @@ export function registerReferenceSliceCollectionsExtendedComputedSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/briefs/items/${briefId}`)
       .withJson({
-        title: "M44 Brief Resolver Proof Updated",
+        title: "Brief Resolver Beacon Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         summary: "Updated resolver proof summary",
-        sourceUrl: "https://briefs.example.test/m44-proof-updated"
+        sourceUrl: "https://briefs.example.test/brief-proof-updated"
       })
       .expectStatus(200);
     expect(updateResponse.body.ok).toBe(true);
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: briefId,
-        title: "M44 Brief Resolver Proof Updated",
+        title: "Brief Resolver Beacon Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         summary: "Updated resolver proof summary",
-        sourceUrl: "https://briefs.example.test/m44-proof-updated",
-        headlineCode: "M44 BRIEF RESOLVER PROOF UPDATED",
-        headlineEcho: "M44 Brief Resolver Proof Updated",
-        headlineTitle: "M44 Brief Resolver Proof Updated"
+        sourceUrl: "https://briefs.example.test/brief-proof-updated",
+        headlineCode: "BRIEF RESOLVER BEACON UPDATED",
+        headlineEcho: "Brief Resolver Beacon Updated",
+        headlineTitle: "Brief Resolver Beacon Updated"
       })
     );
 
     const listResponse = await spec()
-      .get("/api/reference/collections/briefs/items?status=published&category=ops&recordId=rec-002&search=m44")
+      .get("/api/reference/collections/briefs/items?status=published&category=ops&recordId=rec-002&search=beacon")
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
     expect(listResponse.body.meta.total).toBe(1);
@@ -198,30 +198,30 @@ export function registerReferenceSliceCollectionsExtendedComputedSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/digests/items")
       .withJson({
-        title: "M45 Digest Resolver Proof",
+        title: "Digest Resolver Beacon",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         summary: "Resolver catalog multi-token proof",
-        sourceUrl: "https://digests.example.test/m45-proof"
+        sourceUrl: "https://digests.example.test/digest-proof"
       })
       .expectStatus(201);
     expect(createResponse.body.ok).toBe(true);
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
-        title: "M45 Digest Resolver Proof",
+        title: "Digest Resolver Beacon",
         status: "draft",
         category: "news",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         summary: "Resolver catalog multi-token proof",
-        sourceUrl: "https://digests.example.test/m45-proof",
-        slug: "m45-digest-resolver-proof",
-        headlineCode: "M45 DIGEST RESOLVER PROOF",
-        headlineEcho: "M45 Digest Resolver Proof",
-        headlineLower: "m45 digest resolver proof",
-        headlineTitle: "M45 Digest Resolver Proof"
+        sourceUrl: "https://digests.example.test/digest-proof",
+        slug: "digest-resolver-beacon",
+        headlineCode: "DIGEST RESOLVER BEACON",
+        headlineEcho: "Digest Resolver Beacon",
+        headlineLower: "digest resolver beacon",
+        headlineTitle: "Digest Resolver Beacon"
       })
     );
     const digestId = createResponse.body.item.id;
@@ -248,38 +248,38 @@ export function registerReferenceSliceCollectionsExtendedComputedSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/digests/items/${digestId}`)
       .withJson({
-        title: "M45 Digest Resolver Proof Updated",
+        title: "Digest Resolver Beacon Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         summary: "Updated resolver catalog multi-token proof",
-        sourceUrl: "https://digests.example.test/m45-proof-updated"
+        sourceUrl: "https://digests.example.test/digest-proof-updated"
       })
       .expectStatus(200);
     expect(updateResponse.body.ok).toBe(true);
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: digestId,
-        title: "M45 Digest Resolver Proof Updated",
+        title: "Digest Resolver Beacon Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         summary: "Updated resolver catalog multi-token proof",
-        sourceUrl: "https://digests.example.test/m45-proof-updated",
-        slug: "m45-digest-resolver-proof-updated",
-        headlineCode: "M45 DIGEST RESOLVER PROOF UPDATED",
-        headlineEcho: "M45 Digest Resolver Proof Updated",
-        headlineLower: "m45 digest resolver proof updated",
-        headlineTitle: "M45 Digest Resolver Proof Updated"
+        sourceUrl: "https://digests.example.test/digest-proof-updated",
+        slug: "digest-resolver-beacon-updated",
+        headlineCode: "DIGEST RESOLVER BEACON UPDATED",
+        headlineEcho: "Digest Resolver Beacon Updated",
+        headlineLower: "digest resolver beacon updated",
+        headlineTitle: "Digest Resolver Beacon Updated"
       })
     );
 
     const listResponse = await spec()
-      .get("/api/reference/collections/digests/items?status=published&category=ops&recordId=rec-002&search=m45")
+      .get("/api/reference/collections/digests/items?status=published&category=ops&recordId=rec-002&search=beacon")
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
     expect(listResponse.body.meta.total).toBe(1);
@@ -393,4 +393,6 @@ export function registerReferenceSliceCollectionsExtendedComputedSuite() {
 
 
 registerReferenceSliceSuiteWithServer(registerReferenceSliceCollectionsExtendedComputedSuite);
+
+
 

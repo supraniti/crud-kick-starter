@@ -44,8 +44,7 @@
         "schema-query-mutation",
         "service-mission-registry",
         "settings-normalization"
-      ],
-      "migration_phase": "phase-1"
+      ]
     },
     {
       "test_file_path": "server/test/core/generated-runtime-singularization.core.test.js",
@@ -55,8 +54,7 @@
       ],
       "capability_tags": [
         "singularization-runtime"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.field-descriptor.core.test.js",
@@ -66,8 +64,7 @@
       ],
       "capability_tags": [
         "scaffolder-field-descriptor"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.generated-descriptor-validation.core.test.js",
@@ -77,8 +74,7 @@
       ],
       "capability_tags": [
         "scaffolder-generated-runtime"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.persistence-policy.core.test.js",
@@ -88,8 +84,7 @@
       ],
       "capability_tags": [
         "scaffolder-persistence-policy"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.profile-validation.core.test.js",
@@ -99,8 +94,7 @@
       ],
       "capability_tags": [
         "scaffolder-profile-validation"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.route-view.core.test.js",
@@ -110,8 +104,7 @@
       ],
       "capability_tags": [
         "scaffolder-route-view"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/module-scaffolder.singularization.core.test.js",
@@ -121,8 +114,7 @@
       ],
       "capability_tags": [
         "scaffolder-core-profile"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/reference-module-id-translation-routes.core.test.js",
@@ -134,8 +126,7 @@
       "capability_tags": [
         "reference-slice-runtime-lifecycle",
         "reference-slice-settings"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/reference-module-id-translation.core.test.js",
@@ -145,8 +136,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/reference-slice.persistence-mode.core.test.js",
@@ -156,8 +146,7 @@
       ],
       "capability_tags": [
         "reference-slice-persistence"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/reference-slice.runtime-discovery.core.test.js",
@@ -167,8 +156,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/reference-slice.runtime-registrar-diagnostics.core.test.js",
@@ -178,8 +166,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/remote-config-validation.core.test.js",
@@ -189,8 +176,7 @@
       ],
       "capability_tags": [
         "remote-config-validation"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/remote-deploy-mission-validation.core.test.js",
@@ -200,8 +186,7 @@
       ],
       "capability_tags": [
         "remote-deploy-validation"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/system.core.test.js",
@@ -213,8 +198,7 @@
       "capability_tags": [
         "infra-control-contracts",
         "system-health"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/core/validation-engine-adapter.core.test.js",
@@ -224,8 +208,7 @@
       ],
       "capability_tags": [
         "validation-engine-adapter"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/module-scaffolder.generated-descriptor-behavior.module-conformance.test.js",
@@ -235,8 +218,7 @@
       ],
       "capability_tags": [
         "scaffolder-generated-runtime"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/module-scaffolder.generated-descriptor-fields.module-conformance.test.js",
@@ -246,8 +228,7 @@
       ],
       "capability_tags": [
         "scaffolder-generated-runtime"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/module-scaffolder.onboarding.module-conformance.test.js",
@@ -257,8 +238,7 @@
       ],
       "capability_tags": [
         "scaffolder-onboarding-sla"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-options-provider-lifecycle.conformance.test.js",
@@ -268,8 +248,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.collections-core-baseline.module-conformance.test.js",
@@ -279,8 +258,7 @@
       ],
       "capability_tags": [
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.collections-core-crud.module-conformance.test.js",
@@ -290,8 +268,7 @@
       ],
       "capability_tags": [
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.collections-extended-behavior.module-conformance.test.js",
@@ -301,8 +278,7 @@
       ],
       "capability_tags": [
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.collections-extended-computed.module-conformance.test.js",
@@ -312,8 +288,7 @@
       ],
       "capability_tags": [
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.collections-extended-crud.module-conformance.test.js",
@@ -323,8 +298,7 @@
       ],
       "capability_tags": [
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.delete-policy.module-conformance.test.js",
@@ -335,8 +309,7 @@
       "capability_tags": [
         "reference-slice-delete-policy",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.deploy-remotes.module-conformance.test.js",
@@ -346,8 +319,7 @@
       ],
       "capability_tags": [
         "reference-slice-deploy-remotes"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.generated-runtime-core.module-conformance.test.js",
@@ -357,8 +329,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.generated-runtime-validation.module-conformance.test.js",
@@ -368,8 +339,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.iter1.assignment.module-conformance.test.js",
@@ -380,8 +350,7 @@
       "capability_tags": [
         "reference-slice-assignment-replay",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.iter2.assignment.module-conformance.test.js",
@@ -392,8 +361,7 @@
       "capability_tags": [
         "reference-slice-assignment-replay",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.iter3.assignment.module-conformance.test.js",
@@ -404,8 +372,7 @@
       "capability_tags": [
         "reference-slice-assignment-replay",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.iter4.assignment.module-conformance.test.js",
@@ -416,8 +383,7 @@
       "capability_tags": [
         "reference-slice-assignment-replay",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.iter5.assignment.module-conformance.test.js",
@@ -428,8 +394,7 @@
       "capability_tags": [
         "reference-slice-assignment-replay",
         "reference-slice-collections-crud"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.module-settings.owner.conformance.test.js",
@@ -440,8 +405,7 @@
       "capability_tags": [
         "reference-slice-persistence",
         "reference-slice-settings"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.persistence-restart.module-conformance.test.js",
@@ -451,8 +415,7 @@
       ],
       "capability_tags": [
         "reference-slice-persistence"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/module-conformance/reference-slice.runtime-mission-lifecycle.module-conformance.test.js",
@@ -462,8 +425,7 @@
       ],
       "capability_tags": [
         "reference-slice-runtime-lifecycle"
-      ],
-      "migration_phase": "phase-2"
+      ]
     },
     {
       "test_file_path": "server/test/runtime-integration/infra.degraded.runtime-integration.test.js",
@@ -473,8 +435,7 @@
       ],
       "capability_tags": [
         "infra-degraded-contracts"
-      ],
-      "migration_phase": "phase-4"
+      ]
     },
     {
       "test_file_path": "server/test/runtime-integration/infra.live.runtime-integration.test.js",
@@ -484,31 +445,40 @@
       ],
       "capability_tags": [
         "infra-live-integration"
-      ],
-      "migration_phase": "phase-4"
+      ]
     },
     {
-      "test_file_path": "server/test/runtime-integration/m22-api-runner.runtime-integration.test.js",
+      "test_file_path": "server/test/runtime-integration/mongo.live-persistence.runtime-integration.test.js",
       "lane": "runtime-integration",
       "flow_ids": [
-        "FLOW-RUNTIME-M22-001"
+        "FLOW-INFRA-004"
       ],
       "capability_tags": [
-        "m22-api-runner-replay"
-      ],
-      "migration_phase": "phase-5"
+        "infra-live-mongo-persistence"
+      ]
     },
     {
-      "test_file_path": "server/test/runtime-integration/m26-api-runner.runtime-integration.test.js",
+      "test_file_path": "server/test/runtime-integration/deployment-mission-policy-api-runner.runtime-integration.test.js",
       "lane": "runtime-integration",
       "flow_ids": [
-        "FLOW-RUNTIME-M26-001"
+        "FLOW-RUNTIME-DEPLOYMENT-MISSION-POLICY-001"
       ],
       "capability_tags": [
-        "m26-api-runner-replay"
+        "deployment-mission-policy-api-runner-replay"
+      ]
+    },
+    {
+      "test_file_path": "server/test/runtime-integration/editorial-capability-api-runner.runtime-integration.test.js",
+      "lane": "runtime-integration",
+      "flow_ids": [
+        "FLOW-RUNTIME-EDITORIAL-CAPABILITY-001"
       ],
-      "migration_phase": "phase-5"
+      "capability_tags": [
+        "editorial-capability-api-runner-replay"
+      ]
     }
   ]
 }
+
+
 

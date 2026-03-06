@@ -27,8 +27,7 @@
       ],
       "capability_tags": [
         "route-actions-navigation"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/app-shell-routing.navigation.integration.test.jsx",
@@ -38,8 +37,7 @@
       ],
       "capability_tags": [
         "app-shell-routing"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/module-conformance/collections-crud.lifecycle.module-conformance.test.jsx",
@@ -51,8 +49,7 @@
         "collections-crud-ui",
         "cross-collection-crud-workflow",
         "schema-driven-status-options"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/module-conformance/collections-crud.reference-policies.module-conformance.test.jsx",
@@ -63,8 +60,7 @@
       "capability_tags": [
         "delete-policy-guided-action",
         "inline-reference-create"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/module-conformance/collections-crud.validation-diagnostics.module-conformance.test.jsx",
@@ -75,8 +71,7 @@
       "capability_tags": [
         "aggregated-conflict-envelope",
         "unsupported-diagnostics"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/collections-domain.core.test.jsx",
@@ -88,8 +83,7 @@
       "capability_tags": [
         "collections-domain-normalization",
         "reference-key-derivation"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/collections-field-registry.core.test.jsx",
@@ -101,8 +95,7 @@
       "capability_tags": [
         "collections-field-registry",
         "unsupported-diagnostics"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/dispatches-route-adapter.core.test.jsx",
@@ -112,8 +105,7 @@
       ],
       "capability_tags": [
         "dispatch-route-state-adapter"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/app-shell-hydration.integration.test.jsx",
@@ -124,8 +116,7 @@
       "capability_tags": [
         "app-shell-routing",
         "workspace-hydration-isolation"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/view-registry.descriptor.core.test.jsx",
@@ -135,8 +126,7 @@
       ],
       "capability_tags": [
         "view-registry"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/view-registry.entrypoint.core.test.jsx",
@@ -146,8 +136,7 @@
       ],
       "capability_tags": [
         "route-entrypoint-resolution"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/deploy-remotes.integration.test.jsx",
@@ -157,8 +146,7 @@
       ],
       "capability_tags": [
         "deploy-remotes-ui"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/mission-operator.integration.test.jsx",
@@ -168,8 +156,7 @@
       ],
       "capability_tags": [
         "mission-operator-ui"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/module-lifecycle-collection-availability.integration.test.jsx",
@@ -179,8 +166,7 @@
       ],
       "capability_tags": [
         "module-lifecycle-collection-availability"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/module-lifecycle-runtime.integration.test.jsx",
@@ -190,8 +176,7 @@
       ],
       "capability_tags": [
         "module-runtime-lifecycle-controls"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/module-settings.integration.test.jsx",
@@ -203,8 +188,7 @@
       "capability_tags": [
         "module-settings-disabled-read",
         "module-settings-ui"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/app-integration/products-taxonomies.integration.test.jsx",
@@ -214,8 +198,7 @@
       ],
       "capability_tags": [
         "taxonomy-safeguard-ui"
-      ],
-      "migration_phase": "phase-3"
+      ]
     },
     {
       "test_file_path": "frontend/src/tests/core/reference-api.core.test.jsx",
@@ -225,9 +208,9 @@
       ],
       "capability_tags": [
         "reference-api-filter-forwarding"
-      ],
-      "migration_phase": "phase-3"
+      ]
     }
   ]
 }
+
 

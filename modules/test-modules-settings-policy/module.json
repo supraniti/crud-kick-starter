@@ -632,12 +632,10 @@
   "metadata": {
     "owner": "reference-domain-runtime",
     "maturity": "proof",
-    "recomposition": {
-      "stage": "stage-3",
-      "wave": "S3.1",
-      "pass": "capability-recomposition-pass1",
+    "lineage": {
+      "generator": "capability-recomposition",
       "timestampUtc": "2026-03-03T16:26:04.637Z",
-      "legacyModuleIds": [
+      "sourceModuleIds": [
         "iter2-environments",
         "iter2-gates",
         "iter2-release-plans",

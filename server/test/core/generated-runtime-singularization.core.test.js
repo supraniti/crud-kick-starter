@@ -28,7 +28,7 @@ describe("generated runtime singularization contract", () => {
     expect(definition.sequenceKeyAliases).toEqual(["nextDispatcheNumber"]);
   });
 
-  test("accepts legacy sequence key aliases for deterministic state migration", () => {
+  test("accepts legacy sequence key aliases for deterministic state continuity", () => {
     const [definition] = normalizeCollectionDefinitions(
       [
         {

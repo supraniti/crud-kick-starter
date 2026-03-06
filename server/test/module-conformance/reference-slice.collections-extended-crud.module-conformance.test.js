@@ -69,7 +69,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/articles/items")
       .withJson({
-        title: "M26 Articles Proof",
+        title: "Editorial Articles Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -81,14 +81,14 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M26 Articles Proof",
+        title: "Editorial Articles Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         recordTitle: expect.any(String),
-        slug: "m26-articles-proof"
+        slug: "editorial-articles-proof"
       })
     );
 
@@ -96,7 +96,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
 
     const listResponse = await spec()
       .get(
-        "/api/reference/collections/articles/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&search=m26"
+        "/api/reference/collections/articles/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&search=editorial"
       )
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
@@ -107,7 +107,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
         category: "guide",
         labels: ["featured", "engineering"],
         recordId: "rec-001",
-        search: "m26"
+        search: "editorial"
       })
     );
 
@@ -133,7 +133,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/articles/items/${createdId}`)
       .withJson({
-        title: "M26 Articles Proof Updated",
+        title: "Editorial Articles Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -145,14 +145,14 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M26 Articles Proof Updated",
+        title: "Editorial Articles Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         recordTitle: expect.any(String),
-        slug: "m26-articles-proof-updated"
+        slug: "editorial-articles-proof-updated"
       })
     );
 
@@ -224,7 +224,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/authors/items")
       .withJson({
-        title: "M28 Authors Proof",
+        title: "Author Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -236,14 +236,14 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M28 Authors Proof",
+        title: "Author Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
         publishedOn: null,
         recordId: "rec-001",
         recordTitle: expect.any(String),
-        slug: "m28-authors-proof"
+        slug: "author-capability-proof"
       })
     );
 
@@ -251,7 +251,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
 
     const listResponse = await spec()
       .get(
-        "/api/reference/collections/authors/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&search=m28"
+        "/api/reference/collections/authors/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&search=author"
       )
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
@@ -262,7 +262,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
         category: "guide",
         labels: ["featured", "engineering"],
         recordId: "rec-001",
-        search: "m28"
+        search: "author"
       })
     );
 
@@ -288,7 +288,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/authors/items/${createdId}`)
       .withJson({
-        title: "M28 Authors Proof Updated",
+        title: "Author Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -300,14 +300,14 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M28 Authors Proof Updated",
+        title: "Author Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
         publishedOn: "2026-02-14",
         recordId: "rec-002",
         recordTitle: expect.any(String),
-        slug: "m28-authors-proof-updated"
+        slug: "author-capability-proof-updated"
       })
     );
 
@@ -471,7 +471,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/publishers/items")
       .withJson({
-        title: "M29 Publishers Proof",
+        title: "Publisher Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -486,7 +486,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M29 Publishers Proof",
+        title: "Publisher Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -498,8 +498,8 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
         partnerAuthorIdTitle: expect.any(String),
         editionCount: 12,
         publiclyListed: true,
-        imprintCode: "M29 PUBLISHERS PROOF",
-        slug: "m29-publishers-proof"
+        imprintCode: "PUBLISHER CAPABILITY PROOF",
+        slug: "publisher-capability-proof"
       })
     );
 
@@ -507,7 +507,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
 
     const listResponse = await spec()
       .get(
-        `/api/reference/collections/publishers/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&partnerAuthorId=${partnerAuthorOneId}&editionCount=12&publiclyListed=true&search=m29`
+        `/api/reference/collections/publishers/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&partnerAuthorId=${partnerAuthorOneId}&editionCount=12&publiclyListed=true&search=publisher`
       )
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
@@ -521,7 +521,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
           partnerAuthorIdTitle: expect.any(String),
           editionCount: 12,
           publiclyListed: true,
-          imprintCode: "M29 PUBLISHERS PROOF"
+          imprintCode: "PUBLISHER CAPABILITY PROOF"
         })
       ])
     );
@@ -534,7 +534,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
         partnerAuthorId: partnerAuthorOneId,
         editionCount: 12,
         publiclyListed: true,
-        search: "m29"
+        search: "publisher"
       })
     );
 
@@ -560,7 +560,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/publishers/items/${createdId}`)
       .withJson({
-        title: "M29 Publishers Proof Updated",
+        title: "Publisher Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -575,7 +575,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M29 Publishers Proof Updated",
+        title: "Publisher Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -587,8 +587,8 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
         partnerAuthorIdTitle: expect.any(String),
         editionCount: 44,
         publiclyListed: false,
-        imprintCode: "M29 PUBLISHERS PROOF UPDATED",
-        slug: "m29-publishers-proof-updated"
+        imprintCode: "PUBLISHER CAPABILITY PROOF UPDATED",
+        slug: "publisher-capability-proof-updated"
       })
     );
 
@@ -599,7 +599,7 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
     expect(readResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        imprintCode: "M29 PUBLISHERS PROOF UPDATED",
+        imprintCode: "PUBLISHER CAPABILITY PROOF UPDATED",
         editionCount: 44,
         publiclyListed: false
       })
@@ -621,4 +621,5 @@ export function registerReferenceSliceCollectionsExtendedCrudSuite() {
 
 
 registerReferenceSliceSuiteWithServer(registerReferenceSliceCollectionsExtendedCrudSuite);
+
 

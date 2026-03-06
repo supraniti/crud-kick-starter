@@ -129,7 +129,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     const createResponse = await spec()
       .post("/api/reference/collections/editors/items")
       .withJson({
-        title: "M30 Editors Proof",
+        title: "Editor Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -146,7 +146,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     expect(createResponse.body.item).toEqual(
       expect.objectContaining({
         id: expect.any(String),
-        title: "M30 Editors Proof",
+        title: "Editor Capability Proof",
         status: "review",
         category: "guide",
         labels: ["featured", "engineering"],
@@ -162,7 +162,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
         verified: true,
         bioSlug: "lead-standards-editor",
         bioCode: "LEAD STANDARDS EDITOR",
-        slug: "m30-editors-proof"
+        slug: "editor-capability-proof"
       })
     );
 
@@ -170,7 +170,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
 
     const listResponse = await spec()
       .get(
-        `/api/reference/collections/editors/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&mentorId=${mentorAuthorTwoId}&focusAreas=standards,style&editorialScore=92.5&verified=true&search=m30`
+        `/api/reference/collections/editors/items?status=review&category=guide&labels=featured,engineering&recordId=rec-001&mentorId=${mentorAuthorTwoId}&focusAreas=standards,style&editorialScore=92.5&verified=true&search=editor`
       )
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
@@ -185,7 +185,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
         focusAreas: ["standards", "style"],
         editorialScore: 92.5,
         verified: true,
-        search: "m30"
+        search: "editor"
       })
     );
 
@@ -211,7 +211,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     const updateResponse = await spec()
       .put(`/api/reference/collections/editors/items/${createdId}`)
       .withJson({
-        title: "M30 Editors Proof Updated",
+        title: "Editor Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -228,7 +228,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     expect(updateResponse.body.item).toEqual(
       expect.objectContaining({
         id: createdId,
-        title: "M30 Editors Proof Updated",
+        title: "Editor Capability Proof Updated",
         status: "published",
         category: "ops",
         labels: ["release"],
@@ -244,7 +244,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
         verified: false,
         bioSlug: "lead-standards-editor-updated",
         bioCode: "LEAD STANDARDS EDITOR UPDATED",
-        slug: "m30-editors-proof-updated"
+        slug: "editor-capability-proof-updated"
       })
     );
 
@@ -281,7 +281,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     const firstCreate = await spec()
       .post("/api/reference/collections/reviews/items")
       .withJson({
-        title: "M43 Reviews Behavior Proof",
+        title: "Review Behavior Sentinel",
         status: "published",
         category: "news",
         labels: ["featured"],
@@ -291,12 +291,12 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     expect(firstCreate.body.ok).toBe(true);
     expect(firstCreate.body.item).toEqual(
       expect.objectContaining({
-        title: "M43 Reviews Behavior Proof",
+        title: "Review Behavior Sentinel",
         status: "published",
         category: "news",
         labels: ["featured"],
         publishedOn: null,
-        slug: "m43-reviews-behavior-proof"
+        slug: "review-behavior-sentinel"
       })
     );
     const firstId = firstCreate.body.item.id;
@@ -304,7 +304,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     const secondCreate = await spec()
       .post("/api/reference/collections/reviews/items")
       .withJson({
-        title: "M43 Reviews Behavior Proof",
+        title: "Review Behavior Sentinel",
         status: "published",
         category: "ops",
         labels: [],
@@ -327,7 +327,7 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
     expect(updateFirst.body.item.publishedOn).toBe(null);
 
     const listResponse = await spec()
-      .get("/api/reference/collections/reviews/items?status=published&category=ops&search=m43")
+      .get("/api/reference/collections/reviews/items?status=published&category=ops&search=sentinel")
       .expectStatus(200);
     expect(listResponse.body.ok).toBe(true);
     expect(listResponse.body.meta.total).toBe(2);
@@ -352,4 +352,5 @@ export function registerReferenceSliceCollectionsExtendedBehaviorSuite() {
 
 
 registerReferenceSliceSuiteWithServer(registerReferenceSliceCollectionsExtendedBehaviorSuite);
+
 

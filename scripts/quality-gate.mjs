@@ -66,16 +66,16 @@ const STEP_CATALOG = {
     command: "pnpm",
     args: ["test:e2e:smoke"]
   },
-  "m22-api-runner": {
-    id: "m22-api-runner",
+  "deployment-mission-policy-api-runner": {
+    id: "deployment-mission-policy-api-runner",
     command: "pnpm",
-    args: ["api-runner:m22", "--", "--no-write-reports"],
+    args: ["api-runner:deployment-mission-policy", "--", "--no-write-reports"],
     env: getDynamicLaneEnv()
   },
-  "m26-api-runner": {
-    id: "m26-api-runner",
+  "editorial-capability-api-runner": {
+    id: "editorial-capability-api-runner",
     command: "pnpm",
-    args: ["api-runner:m26", "--", "--no-write-reports"],
+    args: ["api-runner:editorial-capability", "--", "--no-write-reports"],
     env: getDynamicLaneEnv()
   },
   "frontend-build": {
@@ -122,8 +122,8 @@ const PROFILE_STEP_IDS = {
     "lane-frontend-conformance",
     "lane-frontend-integration",
     "lane-e2e-smoke",
-    "m22-api-runner",
-    "m26-api-runner",
+    "deployment-mission-policy-api-runner",
+    "editorial-capability-api-runner",
     "frontend-build",
     "mission-replay-gate"
   ]
@@ -285,3 +285,4 @@ const isMainModule = (() => {
 if (isMainModule) {
   run();
 }
+
